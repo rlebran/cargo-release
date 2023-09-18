@@ -94,3 +94,7 @@ predicates = "3.0"
 snapbox = "0.4.12"
 cargo-test-macro.git = "https://github.com/rust-lang/cargo"
 cargo-test-support.git = "https://github.com/rust-lang/cargo"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
