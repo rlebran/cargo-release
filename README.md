@@ -51,7 +51,7 @@ Once you are ready, pass the `--execute` flag.
 ## Related tools
 
 - [release-pr Action](https://github.com/cargo-bins/release-pr)
-- [cargo-smart-release](https://github.com/Byron/gitoxide/tree/main/cargo-smart-release)
+- [cargo-smart-release](https://github.com/Byron/cargo-smart-release)
 - [cargo-set-version](https://github.com/killercup/cargo-edit)
 - [cargo-unleash](https://github.com/paritytech/cargo-unleash)
 - [release-plz](https://crates.io/crates/release-plz)
