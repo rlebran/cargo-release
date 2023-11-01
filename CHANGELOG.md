@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.0] - 2023-11-01
+
 ### Fixes
 
 - Always use sparse index
@@ -648,7 +650,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.24.12...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.0...HEAD
+[0.25.0]: https://github.com/crate-ci/cargo-release/compare/v0.24.12...v0.25.0
 [0.24.12]: https://github.com/crate-ci/cargo-release/compare/v0.24.11...v0.24.12
 [0.24.11]: https://github.com/crate-ci/cargo-release/compare/v0.24.10...v0.24.11
 [0.24.10]: https://github.com/crate-ci/cargo-release/compare/v0.24.9...v0.24.10
