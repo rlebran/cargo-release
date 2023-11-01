@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Always use sparse index
+
 ## [0.24.12] - 2023-09-11
 
 ### Compatibility
