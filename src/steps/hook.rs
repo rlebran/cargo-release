@@ -47,7 +47,7 @@ pub struct HookStep {
 impl HookStep {
     pub fn run(&self) -> Result<(), CliError> {
         git::git_version()?;
-        let index = crates_index::Index::new_cargo_default()?;
+        let mut index = crate::ops::index::CratesIoIndex::open()?;
 
         if self.dry_run {
             let _ =
@@ -87,7 +87,7 @@ impl HookStep {
             {
                 let version = &pkg.initial_version;
                 if !crate::ops::cargo::is_published(
-                    &index,
+                    &mut index,
                     crate_name,
                     &version.full_version_string,
                 ) {
