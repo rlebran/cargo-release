@@ -1,4 +1,5 @@
 use tame_index::krate::IndexKrate;
+use tame_index::utils::flock::FileLock;
 
 pub struct CratesIoIndex {
     index: RemoteIndex,
@@ -55,6 +56,7 @@ impl CratesIoIndex {
 pub struct RemoteIndex {
     index: tame_index::SparseIndex,
     client: reqwest::blocking::Client,
+    lock: FileLock,
     etags: Vec<(String, String)>,
 }
 
@@ -67,10 +69,12 @@ impl RemoteIndex {
         let client = reqwest::blocking::ClientBuilder::new()
             .http2_prior_knowledge()
             .build()?;
+        let lock = FileLock::unlocked();
 
         Ok(Self {
             index,
             client,
+            lock,
             etags: Vec::new(),
         })
     }
@@ -86,7 +90,9 @@ impl RemoteIndex {
             .unwrap_or("");
 
         let krate_name = name.try_into()?;
-        let req = self.index.make_remote_request(krate_name, Some(etag))?;
+        let req = self
+            .index
+            .make_remote_request(krate_name, Some(etag), &self.lock)?;
         let res = self.client.execute(req.try_into()?)?;
 
         // Grab the etag if it exists for future requests
@@ -115,7 +121,7 @@ impl RemoteIndex {
             .map_err(|e| tame_index::Error::from(tame_index::error::HttpError::from(e)))?;
 
         self.index
-            .parse_remote_response(krate_name, response, false)
+            .parse_remote_response(krate_name, response, false, &self.lock)
             .map_err(Into::into)
     }
 }
