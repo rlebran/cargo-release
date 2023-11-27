@@ -367,7 +367,7 @@ pub enum SharedVersion {
 }
 
 impl SharedVersion {
-    pub const WORKSPACE: &str = "workspace";
+    pub const WORKSPACE: &'static str = "workspace";
 
     pub fn as_name(&self) -> Option<&str> {
         match self {
