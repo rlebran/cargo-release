@@ -257,7 +257,7 @@ dependencies = [
  "termcolor",
  "time",
  "toml",
- "toml_edit 0.20.7",
+ "toml_edit 0.21.0",
  "trycmd",
 ]
 
