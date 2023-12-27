@@ -112,18 +112,25 @@ pub fn publish(
 
 pub fn wait_for_publish(
     index: &mut crate::ops::index::CratesIoIndex,
+    registry: Option<&str>,
     name: &str,
     version: &str,
     timeout: std::time::Duration,
     dry_run: bool,
 ) -> CargoResult<()> {
     if !dry_run {
+        if registry.is_none() {
+            // HACK: `index` never reports crates as present for alternative registries
+            log::debug!("Not waiting for publish as that is only supported for crates.io; ensure you are using at least cargo v1.66 which will wait for you.");
+            return Ok(());
+        }
+
         let now = std::time::Instant::now();
         let sleep_time = std::time::Duration::from_secs(1);
         let mut logged = false;
         loop {
-            index.update_krate(name);
-            if is_published(index, name, version) {
+            index.update_krate(registry, name);
+            if is_published(index, registry, name, version) {
                 break;
             } else if timeout < now.elapsed() {
                 anyhow::bail!("timeout waiting for crate to be published");
@@ -145,10 +152,11 @@ pub fn wait_for_publish(
 
 pub fn is_published(
     index: &mut crate::ops::index::CratesIoIndex,
+    registry: Option<&str>,
     name: &str,
     version: &str,
 ) -> bool {
-    match index.has_krate_version(name, version) {
+    match index.has_krate_version(registry, name, version) {
         Ok(has_krate_version) => has_krate_version.unwrap_or(false),
         Err(err) => {
             // For both http and git indices, this _might_ be an error that goes away in

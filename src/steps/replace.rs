@@ -84,6 +84,7 @@ impl ReplaceStep {
                 let version = &pkg.initial_version;
                 if !crate::ops::cargo::is_published(
                     &mut index,
+                    pkg.config.registry(),
                     crate_name,
                     &version.full_version_string,
                 ) {

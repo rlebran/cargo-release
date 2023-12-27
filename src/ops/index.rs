@@ -18,30 +18,45 @@ impl CratesIoIndex {
 
     /// Determines if the specified crate exists in the crates.io index
     #[inline]
-    pub fn has_krate(&mut self, name: &str) -> Result<bool, crate::error::CliError> {
-        Ok(self.krate(name)?.map(|_| true).unwrap_or(false))
+    pub fn has_krate(
+        &mut self,
+        registry: Option<&str>,
+        name: &str,
+    ) -> Result<bool, crate::error::CliError> {
+        Ok(self.krate(registry, name)?.map(|_| true).unwrap_or(false))
     }
 
     /// Determines if the specified crate version exists in the crates.io index
     #[inline]
     pub fn has_krate_version(
         &mut self,
+        registry: Option<&str>,
         name: &str,
         version: &str,
     ) -> Result<Option<bool>, crate::error::CliError> {
-        let krate = self.krate(name)?;
+        let krate = self.krate(registry, name)?;
         Ok(krate.map(|ik| ik.versions.iter().any(|iv| iv.version == version)))
     }
 
     #[inline]
-    pub fn update_krate(&mut self, name: &str) {
+    pub fn update_krate(&mut self, registry: Option<&str>, name: &str) {
+        if registry.is_some() {
+            return;
+        }
+
         self.cache.remove(name);
     }
 
     pub(crate) fn krate(
         &mut self,
+        registry: Option<&str>,
         name: &str,
     ) -> Result<Option<IndexKrate>, crate::error::CliError> {
+        if let Some(registry) = registry {
+            log::trace!("Cannot connect to registry `{registry}`");
+            return Ok(None);
+        }
+
         if let Some(entry) = self.cache.get(name) {
             log::trace!("Reusing index for {name}");
             return Ok(entry.clone());
