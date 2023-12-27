@@ -46,7 +46,7 @@ pub struct ReleaseStep {
 impl ReleaseStep {
     pub fn run(&self) -> Result<(), CliError> {
         git::git_version()?;
-        let mut index = crate::ops::index::CratesIoIndex::open()?;
+        let mut index = crate::ops::index::CratesIoIndex::new();
 
         if self.dry_run {
             let _ =
@@ -73,7 +73,7 @@ impl ReleaseStep {
                     pkg.bump(level_or_version, self.metadata.as_deref())?;
                 }
             }
-            if index.has_krate(&pkg.meta.name)? {
+            if index.has_krate(pkg.config.registry(), &pkg.meta.name)? {
                 // Already published, skip it.  Use `cargo release owner` for one-time updates
                 pkg.ensure_owners = false;
             }
@@ -101,7 +101,12 @@ impl ReleaseStep {
                 && !explicitly_excluded
             {
                 let version = &pkg.initial_version;
-                if !cargo::is_published(&mut index, crate_name, &version.full_version_string) {
+                if !cargo::is_published(
+                    &mut index,
+                    pkg.config.registry(),
+                    crate_name,
+                    &version.full_version_string,
+                ) {
                     log::debug!(
                         "enabled {}, v{} is unpublished",
                         crate_name,
@@ -152,10 +157,16 @@ impl ReleaseStep {
                 continue;
             };
 
+            // HACK: `index` only supports default registry
             if pkg.config.publish() && pkg.config.registry().is_none() {
                 let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
                 let crate_name = pkg.meta.name.as_str();
-                if !cargo::is_published(&mut index, crate_name, &version.full_version_string) {
+                if !cargo::is_published(
+                    &mut index,
+                    pkg.config.registry(),
+                    crate_name,
+                    &version.full_version_string,
+                ) {
                     let _ = crate::ops::shell::warn(format!(
                         "disabled by user, skipping {} v{} despite being unpublished",
                         crate_name, version.full_version_string,
@@ -195,16 +206,19 @@ impl ReleaseStep {
             if !pkg.config.publish() {
                 continue;
             }
-            if pkg.config.registry().is_none() {
-                let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
-                let crate_name = pkg.meta.name.as_str();
-                if cargo::is_published(&mut index, crate_name, &version.full_version_string) {
-                    let _ = crate::ops::shell::error(format!(
-                        "{} {} is already published",
-                        crate_name, version.full_version_string
-                    ));
-                    double_publish = true;
-                }
+            let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
+            let crate_name = pkg.meta.name.as_str();
+            if cargo::is_published(
+                &mut index,
+                pkg.config.registry(),
+                crate_name,
+                &version.full_version_string,
+            ) {
+                let _ = crate::ops::shell::error(format!(
+                    "{} {} is already published",
+                    crate_name, version.full_version_string
+                ));
+                double_publish = true;
             }
         }
         if double_publish {

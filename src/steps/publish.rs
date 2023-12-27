@@ -80,13 +80,14 @@ impl PublishStep {
 
         let mut pkgs = plan::plan(pkgs)?;
 
-        let mut index = crate::ops::index::CratesIoIndex::open()?;
+        let mut index = crate::ops::index::CratesIoIndex::new();
         for pkg in pkgs.values_mut() {
-            if pkg.config.registry().is_none() && pkg.config.release() {
+            if pkg.config.release() {
                 let crate_name = pkg.meta.name.as_str();
                 let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
                 if crate::ops::cargo::is_published(
                     &mut index,
+                    pkg.config.registry(),
                     crate_name,
                     &version.full_version_string,
                 ) {
@@ -200,33 +201,31 @@ pub fn publish(
             return Err(101.into());
         }
 
-        if pkg.config.registry().is_none() {
-            let timeout = std::time::Duration::from_secs(300);
-            let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
-            crate::ops::cargo::wait_for_publish(
-                index,
-                crate_name,
-                &version.full_version_string,
-                timeout,
-                dry_run,
-            )?;
-            // HACK: Even once the index is updated, there seems to be another step before the publish is fully ready.
-            // We don't have a way yet to check for that, so waiting for now in hopes everything is ready
-            if !dry_run {
-                let publish_grace_sleep = std::env::var("PUBLISH_GRACE_SLEEP")
-                    .unwrap_or_else(|_| Default::default())
-                    .parse()
-                    .unwrap_or(0);
-                if 0 < publish_grace_sleep {
-                    log::debug!(
-                        "waiting an additional {} seconds for crates.io to update its indices...",
-                        publish_grace_sleep
-                    );
-                    std::thread::sleep(std::time::Duration::from_secs(publish_grace_sleep));
-                }
+        let timeout = std::time::Duration::from_secs(300);
+        let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
+        crate::ops::cargo::wait_for_publish(
+            index,
+            pkg.config.registry(),
+            crate_name,
+            &version.full_version_string,
+            timeout,
+            dry_run,
+        )?;
+        // HACK: Even once the index is updated, there seems to be another step before the publish is fully ready.
+        // We don't have a way yet to check for that, so waiting for now in hopes everything is ready
+        if !dry_run {
+            let publish_grace_sleep = std::env::var("PUBLISH_GRACE_SLEEP")
+                .unwrap_or_else(|_| Default::default())
+                .parse()
+                .unwrap_or(0);
+            if 0 < publish_grace_sleep {
+                log::debug!(
+                    "waiting an additional {} seconds for {} to update its indices...",
+                    publish_grace_sleep,
+                    pkg.config.registry().unwrap_or("crates.io")
+                );
+                std::thread::sleep(std::time::Duration::from_secs(publish_grace_sleep));
             }
-        } else {
-            log::debug!("not waiting for publish because the registry is not crates.io and doesn't get updated automatically");
         }
     }
 

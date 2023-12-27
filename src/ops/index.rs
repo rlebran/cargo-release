@@ -1,53 +1,74 @@
 use tame_index::krate::IndexKrate;
 use tame_index::utils::flock::FileLock;
 
+#[derive(Default)]
 pub struct CratesIoIndex {
-    index: RemoteIndex,
+    index: Option<RemoteIndex>,
     cache: std::collections::HashMap<String, Option<IndexKrate>>,
 }
 
 impl CratesIoIndex {
     #[inline]
-    pub fn open() -> Result<Self, crate::error::CliError> {
-        Ok(Self {
-            index: RemoteIndex::open()?,
-            cache: Default::default(),
-        })
+    pub fn new() -> Self {
+        Self {
+            index: None,
+            cache: std::collections::HashMap::new(),
+        }
     }
 
     /// Determines if the specified crate exists in the crates.io index
     #[inline]
-    pub fn has_krate(&mut self, name: &str) -> Result<bool, crate::error::CliError> {
-        Ok(self.krate(name)?.map(|_| true).unwrap_or(false))
+    pub fn has_krate(
+        &mut self,
+        registry: Option<&str>,
+        name: &str,
+    ) -> Result<bool, crate::error::CliError> {
+        Ok(self.krate(registry, name)?.map(|_| true).unwrap_or(false))
     }
 
     /// Determines if the specified crate version exists in the crates.io index
     #[inline]
     pub fn has_krate_version(
         &mut self,
+        registry: Option<&str>,
         name: &str,
         version: &str,
     ) -> Result<Option<bool>, crate::error::CliError> {
-        let krate = self.krate(name)?;
+        let krate = self.krate(registry, name)?;
         Ok(krate.map(|ik| ik.versions.iter().any(|iv| iv.version == version)))
     }
 
     #[inline]
-    pub fn update_krate(&mut self, name: &str) {
+    pub fn update_krate(&mut self, registry: Option<&str>, name: &str) {
+        if registry.is_some() {
+            return;
+        }
+
         self.cache.remove(name);
     }
 
     pub(crate) fn krate(
         &mut self,
+        registry: Option<&str>,
         name: &str,
     ) -> Result<Option<IndexKrate>, crate::error::CliError> {
+        if let Some(registry) = registry {
+            log::trace!("Cannot connect to registry `{registry}`");
+            return Ok(None);
+        }
+
         if let Some(entry) = self.cache.get(name) {
             log::trace!("Reusing index for {name}");
             return Ok(entry.clone());
         }
 
+        if self.index.is_none() {
+            log::trace!("Connecting to index");
+            self.index = Some(RemoteIndex::open()?);
+        }
+        let index = self.index.as_mut().unwrap();
         log::trace!("Downloading index for {name}");
-        let entry = self.index.krate(name)?;
+        let entry = index.krate(name)?;
         self.cache.insert(name.to_owned(), entry.clone());
         Ok(entry)
     }

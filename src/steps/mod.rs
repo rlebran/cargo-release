@@ -225,9 +225,10 @@ pub fn verify_rate_limit(
     let mut new = 0;
     let mut existing = 0;
     for pkg in pkgs {
+        // Note: these rate limits are only known for default registry
         if pkg.config.registry().is_none() && pkg.config.publish() {
             let crate_name = pkg.meta.name.as_str();
-            if index.has_krate(crate_name)? {
+            if index.has_krate(None, crate_name)? {
                 existing += 1;
             } else {
                 new += 1;
