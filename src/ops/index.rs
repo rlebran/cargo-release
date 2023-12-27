@@ -1,18 +1,19 @@
 use tame_index::krate::IndexKrate;
 use tame_index::utils::flock::FileLock;
 
+#[derive(Default)]
 pub struct CratesIoIndex {
-    index: RemoteIndex,
+    index: Option<RemoteIndex>,
     cache: std::collections::HashMap<String, Option<IndexKrate>>,
 }
 
 impl CratesIoIndex {
     #[inline]
-    pub fn open() -> Result<Self, crate::error::CliError> {
-        Ok(Self {
-            index: RemoteIndex::open()?,
-            cache: Default::default(),
-        })
+    pub fn new() -> Self {
+        Self {
+            index: None,
+            cache: std::collections::HashMap::new(),
+        }
     }
 
     /// Determines if the specified crate exists in the crates.io index
@@ -46,8 +47,13 @@ impl CratesIoIndex {
             return Ok(entry.clone());
         }
 
+        if self.index.is_none() {
+            log::trace!("Connecting to index");
+            self.index = Some(RemoteIndex::open()?);
+        }
+        let index = self.index.as_mut().unwrap();
         log::trace!("Downloading index for {name}");
-        let entry = self.index.krate(name)?;
+        let entry = index.krate(name)?;
         self.cache.insert(name.to_owned(), entry.clone());
         Ok(entry)
     }

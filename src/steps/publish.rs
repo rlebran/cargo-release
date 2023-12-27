@@ -80,7 +80,7 @@ impl PublishStep {
 
         let mut pkgs = plan::plan(pkgs)?;
 
-        let mut index = crate::ops::index::CratesIoIndex::open()?;
+        let mut index = crate::ops::index::CratesIoIndex::new();
         for pkg in pkgs.values_mut() {
             if pkg.config.registry().is_none() && pkg.config.release() {
                 let crate_name = pkg.meta.name.as_str();

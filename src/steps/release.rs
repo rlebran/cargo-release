@@ -46,7 +46,7 @@ pub struct ReleaseStep {
 impl ReleaseStep {
     pub fn run(&self) -> Result<(), CliError> {
         git::git_version()?;
-        let mut index = crate::ops::index::CratesIoIndex::open()?;
+        let mut index = crate::ops::index::CratesIoIndex::new();
 
         if self.dry_run {
             let _ =
