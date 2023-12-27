@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't talk to crates.io when publishing to an alternative registry
+
 ## [0.25.0] - 2023-11-01
 
 ### Fixes
