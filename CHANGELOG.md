@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.2] - 2024-01-09
+
 ### Fixes
 
 - Wait for crates.io publishes, not for other registries
@@ -660,7 +662,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.1...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.2...HEAD
+[0.25.2]: https://github.com/crate-ci/cargo-release/compare/v0.25.1...v0.25.2
 [0.25.1]: https://github.com/crate-ci/cargo-release/compare/v0.25.0...v0.25.1
 [0.25.0]: https://github.com/crate-ci/cargo-release/compare/v0.24.12...v0.25.0
 [0.24.12]: https://github.com/crate-ci/cargo-release/compare/v0.24.11...v0.24.12
