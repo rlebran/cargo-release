@@ -119,7 +119,7 @@ pub fn wait_for_publish(
     dry_run: bool,
 ) -> CargoResult<()> {
     if !dry_run {
-        if registry.is_none() {
+        if registry.is_some() {
             // HACK: `index` never reports crates as present for alternative registries
             log::debug!("Not waiting for publish as that is only supported for crates.io; ensure you are using at least cargo v1.66 which will wait for you.");
             return Ok(());
