@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Wait for crates.io publishes, not for other registries
+
 ## [0.25.1] - 2023-12-27
 
 ### Fixes
