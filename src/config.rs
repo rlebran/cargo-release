@@ -822,6 +822,22 @@ pub fn resolve_config(workspace_root: &Path, manifest_path: &Path) -> CargoResul
 pub fn resolve_overrides(workspace_root: &Path, manifest_path: &Path) -> CargoResult<Config> {
     let mut release_config = Config::default();
 
+    let mut workspace_cache = None;
+    fn load_workspace<'m, 'c: 'm>(
+        workspace_root: &Path,
+        workspace_cache: &'c mut Option<CargoManifest>,
+    ) -> CargoResult<&'m CargoManifest> {
+        if workspace_cache.is_none() {
+            let workspace_path = workspace_root.join("Cargo.toml");
+            let toml = std::fs::read_to_string(&workspace_path)?;
+            let manifest: CargoManifest = toml::from_str(&toml)
+                .with_context(|| format!("Failed to parse `{}`", workspace_path.display()))?;
+
+            *workspace_cache = Some(manifest);
+        }
+        Ok(workspace_cache.as_ref().unwrap())
+    }
+
     // the publish flag in cargo file
     let manifest = std::fs::read_to_string(manifest_path)?;
     let manifest: CargoManifest = toml::from_str(&manifest)
@@ -831,12 +847,7 @@ pub fn resolve_overrides(workspace_root: &Path, manifest_path: &Path) -> CargoRe
             Some(MaybeWorkspace::Defined(publish)) => publish.publishable(),
             Some(MaybeWorkspace::Workspace(workspace)) => {
                 if workspace.workspace {
-                    let workspace_path = workspace_root.join("Cargo.toml");
-                    let workspace = std::fs::read_to_string(&workspace_path)?;
-                    let workspace: CargoManifest =
-                        toml::from_str(&workspace).with_context(|| {
-                            format!("Failed to parse `{}`", workspace_path.display())
-                        })?;
+                    let workspace = load_workspace(workspace_root, &mut workspace_cache)?;
                     workspace
                         .workspace
                         .as_ref()
