@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.3] - 2024-01-10
+
 ### Features
 
 - Automatically skip releasing Cargo 1.75's version-less manifests
@@ -666,7 +668,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.2...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.3...HEAD
+[0.25.3]: https://github.com/crate-ci/cargo-release/compare/v0.25.2...v0.25.3
 [0.25.2]: https://github.com/crate-ci/cargo-release/compare/v0.25.1...v0.25.2
 [0.25.1]: https://github.com/crate-ci/cargo-release/compare/v0.25.0...v0.25.1
 [0.25.0]: https://github.com/crate-ci/cargo-release/compare/v0.24.12...v0.25.0
