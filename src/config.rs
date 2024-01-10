@@ -864,6 +864,11 @@ pub fn resolve_overrides(workspace_root: &Path, manifest_path: &Path) -> CargoRe
         if !publish {
             release_config.publish = Some(false);
         }
+
+        if package.version.is_none() {
+            // No point releasing if it can't be published and doesn't have a version to update
+            release_config.release = Some(false);
+        }
         if package
             .version
             .as_ref()
