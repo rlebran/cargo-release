@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Automatically skip releasing Cargo 1.75's version-less manifests
+
 ## [0.25.2] - 2024-01-09
 
 ### Fixes
