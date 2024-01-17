@@ -23,6 +23,10 @@ pub struct ChangesStep {
     /// Comma-separated globs of branch names a release can happen from
     #[arg(long, value_delimiter = ',')]
     allow_branch: Option<Vec<String>>,
+
+    /// The name of tag for the previous release.
+    #[arg(long, value_name = "NAME", help_heading = "Version")]
+    prev_tag_name: Option<String>,
 }
 
 impl ChangesStep {
@@ -37,7 +41,16 @@ impl ChangesStep {
             .exec()?;
         let config = self.to_config();
         let ws_config = crate::config::load_workspace_config(&config, &ws_meta)?;
-        let pkgs = plan::load(&config, &ws_meta)?;
+        let mut pkgs = plan::load(&config, &ws_meta)?;
+
+        for pkg in pkgs.values_mut() {
+            if let Some(prev_tag) = self.prev_tag_name.as_ref() {
+                // Trust the user that the tag passed in is the latest tag for the workspace and that
+                // they don't care about any changes from before this tag.
+                pkg.set_prior_tag(prev_tag.to_owned());
+            }
+        }
+
         let pkgs = plan::plan(pkgs)?;
 
         let (selected_pkgs, _excluded_pkgs): (Vec<_>, Vec<_>) = pkgs
