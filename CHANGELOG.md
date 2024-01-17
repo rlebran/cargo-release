@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.4] - 2024-01-17
+
 ### Features
 
 - Add `--prev-tag-name` to `cargo release changes`
@@ -672,7 +674,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.3...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.4...HEAD
+[0.25.4]: https://github.com/crate-ci/cargo-release/compare/v0.25.3...v0.25.4
 [0.25.3]: https://github.com/crate-ci/cargo-release/compare/v0.25.2...v0.25.3
 [0.25.2]: https://github.com/crate-ci/cargo-release/compare/v0.25.1...v0.25.2
 [0.25.1]: https://github.com/crate-ci/cargo-release/compare/v0.25.0...v0.25.1
