@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add `--prev-tag-name` to `cargo release changes`
+
 ## [0.25.3] - 2024-01-10
 
 ### Features
