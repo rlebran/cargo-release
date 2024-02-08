@@ -62,8 +62,8 @@ cargo_metadata = "0.18"
 tame-index = "0.9"
 reqwest = { version = "0.11", default-features = false, features = ["blocking", "rustls-tls", "gzip"] }
 git2 = { version = "0.18.1", default-features = false }
-toml_edit = "0.21.1"
-toml = "0.8.9"
+toml_edit = { version = "0.22.0", features = ["serde"] }
+toml = "0.8.10"
 serde = { version = "1.0", features = ["derive"] }
 semver = "1.0"
 quick-error = "2.0"
@@ -84,7 +84,7 @@ log = "0.4"
 env_logger = "0.11"
 globset = { version = "0.4.14", default-features = false }
 dunce = "1.0.4"
-trycmd = "0.14.20"
+trycmd = "0.14.21"
 anyhow = "1.0.79"
 concolor-control = { version = "0.0.7", features = ["auto"] }
 git-conventional = "0.12.4"
