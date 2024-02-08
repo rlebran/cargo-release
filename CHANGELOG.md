@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.5] - 2024-02-08
+
 ### Fixes
 
 - Ensure needed dependency features are enabled
@@ -678,7 +680,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.4...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.5...HEAD
+[0.25.5]: https://github.com/crate-ci/cargo-release/compare/v0.25.4...v0.25.5
 [0.25.4]: https://github.com/crate-ci/cargo-release/compare/v0.25.3...v0.25.4
 [0.25.3]: https://github.com/crate-ci/cargo-release/compare/v0.25.2...v0.25.3
 [0.25.2]: https://github.com/crate-ci/cargo-release/compare/v0.25.1...v0.25.2
