@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ensure needed dependency features are enabled
+
 ## [0.25.4] - 2024-01-17
 
 ### Features
