@@ -88,6 +88,7 @@ trycmd = "0.14.21"
 anyhow = "1.0.79"
 concolor-control = { version = "0.0.7", features = ["auto"] }
 git-conventional = "0.12.4"
+similar = "2.4"
 
 [dev-dependencies]
 assert_fs = "1.1"
