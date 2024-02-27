@@ -1,8 +1,6 @@
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use similar::TextDiff;
-
 use crate::config::Replace;
 use crate::error::CargoResult;
 
@@ -121,14 +119,12 @@ pub fn do_file_replacements(
         if data != replaced {
             if dry_run {
                 if noisy {
-                    let diff = TextDiff::from_lines(&data, &replaced);
-                    let display_path = path.display().to_string();
                     let _ = crate::ops::shell::status(
                         "Replacing",
                         format!(
                             "in {}\n{}",
                             path.display(),
-                            diff.unified_diff().header(&display_path, &display_path)
+                            crate::diff::unified_diff(&data, &replaced, &path, "replaced")
                         ),
                     );
                 } else {

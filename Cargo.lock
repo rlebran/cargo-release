@@ -233,7 +233,6 @@ dependencies = [
  "clap",
  "clap-cargo",
  "concolor-control",
- "difflib",
  "dirs-next",
  "dunce",
  "env_logger",

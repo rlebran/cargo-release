@@ -180,22 +180,9 @@ pub fn set_workspace_version(
 
     if dry_run {
         if manifest != original_manifest {
-            let display_path = manifest_path.display().to_string();
-            let old_lines: Vec<_> = original_manifest
-                .lines()
-                .map(|s| format!("{}\n", s))
-                .collect();
-            let new_lines: Vec<_> = manifest.lines().map(|s| format!("{}\n", s)).collect();
-            let diff = difflib::unified_diff(
-                &old_lines,
-                &new_lines,
-                display_path.as_str(),
-                display_path.as_str(),
-                "original",
-                "updated",
-                0,
-            );
-            log::debug!("change:\n{}", itertools::join(diff.into_iter(), ""));
+            let diff =
+                crate::diff::unified_diff(&original_manifest, &manifest, manifest_path, "updated");
+            log::debug!("change:\n{diff}");
         }
     } else {
         atomic_write(manifest_path, &manifest)?;
@@ -291,22 +278,9 @@ pub fn set_package_version(manifest_path: &Path, version: &str, dry_run: bool) -
 
     if dry_run {
         if manifest != original_manifest {
-            let display_path = manifest_path.display().to_string();
-            let old_lines: Vec<_> = original_manifest
-                .lines()
-                .map(|s| format!("{}\n", s))
-                .collect();
-            let new_lines: Vec<_> = manifest.lines().map(|s| format!("{}\n", s)).collect();
-            let diff = difflib::unified_diff(
-                &old_lines,
-                &new_lines,
-                display_path.as_str(),
-                display_path.as_str(),
-                "original",
-                "updated",
-                0,
-            );
-            log::debug!("change:\n{}", itertools::join(diff.into_iter(), ""));
+            let diff =
+                crate::diff::unified_diff(&original_manifest, &manifest, manifest_path, "updated");
+            log::debug!("change:\n{diff}");
         }
     } else {
         atomic_write(manifest_path, &manifest)?;
@@ -340,22 +314,9 @@ pub fn upgrade_dependency_req(
     let manifest = manifest.to_string();
     if manifest != original_manifest {
         if dry_run {
-            let display_path = manifest_path.display().to_string();
-            let old_lines: Vec<_> = original_manifest
-                .lines()
-                .map(|s| format!("{}\n", s))
-                .collect();
-            let new_lines: Vec<_> = manifest.lines().map(|s| format!("{}\n", s)).collect();
-            let diff = difflib::unified_diff(
-                &old_lines,
-                &new_lines,
-                display_path.as_str(),
-                display_path.as_str(),
-                "original",
-                "updated",
-                0,
-            );
-            log::debug!("change:\n{}", itertools::join(diff.into_iter(), ""));
+            let diff =
+                crate::diff::unified_diff(&original_manifest, &manifest, manifest_path, "updated");
+            log::debug!("change:\n{diff}");
         } else {
             atomic_write(manifest_path, &manifest)?;
         }
