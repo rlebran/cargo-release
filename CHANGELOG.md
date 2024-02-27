@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Improve diff output
+
 ## [0.25.5] - 2024-02-08
 
 ### Fixes
