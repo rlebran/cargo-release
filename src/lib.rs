@@ -7,7 +7,6 @@
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 pub mod config;
-mod diff;
 pub mod error;
 pub mod ops;
 pub mod steps;

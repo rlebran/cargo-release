@@ -180,8 +180,12 @@ pub fn set_workspace_version(
 
     if dry_run {
         if manifest != original_manifest {
-            let diff =
-                crate::diff::unified_diff(&original_manifest, &manifest, manifest_path, "updated");
+            let diff = crate::ops::diff::unified_diff(
+                &original_manifest,
+                &manifest,
+                manifest_path,
+                "updated",
+            );
             log::debug!("change:\n{diff}");
         }
     } else {
@@ -278,8 +282,12 @@ pub fn set_package_version(manifest_path: &Path, version: &str, dry_run: bool) -
 
     if dry_run {
         if manifest != original_manifest {
-            let diff =
-                crate::diff::unified_diff(&original_manifest, &manifest, manifest_path, "updated");
+            let diff = crate::ops::diff::unified_diff(
+                &original_manifest,
+                &manifest,
+                manifest_path,
+                "updated",
+            );
             log::debug!("change:\n{diff}");
         }
     } else {
@@ -314,8 +322,12 @@ pub fn upgrade_dependency_req(
     let manifest = manifest.to_string();
     if manifest != original_manifest {
         if dry_run {
-            let diff =
-                crate::diff::unified_diff(&original_manifest, &manifest, manifest_path, "updated");
+            let diff = crate::ops::diff::unified_diff(
+                &original_manifest,
+                &manifest,
+                manifest_path,
+                "updated",
+            );
             log::debug!("change:\n{diff}");
         } else {
             atomic_write(manifest_path, &manifest)?;
