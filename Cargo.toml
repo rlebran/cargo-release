@@ -19,7 +19,7 @@ include = [
 [package]
 name = "cargo-release"
 description = "Cargo subcommand for you to smooth your release process."
-version = "0.25.5"
+version = "0.25.6"
 repository = "https://github.com/crate-ci/cargo-release"
 readme = "README.md"
 categories = ["development-tools::cargo-plugins"]

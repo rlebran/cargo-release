@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.6] - 2024-02-27
+
 ### Fixes
 
 - Improve diff output
@@ -684,7 +686,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.5...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.6...HEAD
+[0.25.6]: https://github.com/crate-ci/cargo-release/compare/v0.25.5...v0.25.6
 [0.25.5]: https://github.com/crate-ci/cargo-release/compare/v0.25.4...v0.25.5
 [0.25.4]: https://github.com/crate-ci/cargo-release/compare/v0.25.3...v0.25.4
 [0.25.3]: https://github.com/crate-ci/cargo-release/compare/v0.25.2...v0.25.3
