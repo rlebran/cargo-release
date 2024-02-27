@@ -124,7 +124,7 @@ pub fn do_file_replacements(
                         format!(
                             "in {}\n{}",
                             path.display(),
-                            crate::diff::unified_diff(&data, &replaced, &path, "replaced")
+                            crate::ops::diff::unified_diff(&data, &replaced, &path, "replaced")
                         ),
                     );
                 } else {
