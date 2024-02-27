@@ -93,7 +93,7 @@ impl CommitStep {
         if ws_config.is_workspace {
             let consolidate_commits = super::consolidate_commits(&selected_pkgs, &excluded_pkgs)?;
             if !consolidate_commits {
-                let _ = crate::shell::warn(
+                let _ = crate::ops::shell::warn(
                     "ignoring `consolidate-commits=false`; `cargo release commit` can effectively only do one commit",
                 );
             }
