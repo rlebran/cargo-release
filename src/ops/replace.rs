@@ -118,25 +118,13 @@ pub fn do_file_replacements(
 
         if data != replaced {
             if dry_run {
-                let display_path = path.display().to_string();
-                let data_lines: Vec<_> = data.lines().map(|s| format!("{}\n", s)).collect();
-                let replaced_lines: Vec<_> = replaced.lines().map(|s| format!("{}\n", s)).collect();
-                let diff = difflib::unified_diff(
-                    &data_lines,
-                    &replaced_lines,
-                    display_path.as_str(),
-                    display_path.as_str(),
-                    "original",
-                    "replaced",
-                    0,
-                );
                 if noisy {
                     let _ = crate::ops::shell::status(
                         "Replacing",
                         format!(
                             "in {}\n{}",
                             path.display(),
-                            itertools::join(diff.into_iter(), "")
+                            crate::diff::unified_diff(&data, &replaced, &path, "replaced")
                         ),
                     );
                 } else {
