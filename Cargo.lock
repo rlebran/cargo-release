@@ -1948,6 +1948,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "smallvec"
+version = "1.13.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
+
+[[package]]
 name = "smol_str"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2075,9 +2081,9 @@ dependencies = [
 
 [[package]]
 name = "tame-index"
-version = "0.9.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3a6758f8c369099cfed0df5a22e7f4d9cde3936c14e560ec4200f1ae3bc5ad1"
+checksum = "dcfbfbe5fedae2eaba27029008bb867958428b31ae0be838bddfcbebc26987f5"
 dependencies = [
  "camino",
  "home",
@@ -2090,7 +2096,7 @@ dependencies = [
  "serde_json",
  "smol_str",
  "thiserror",
- "toml",
+ "toml-span",
  "twox-hash",
 ]
 
@@ -2264,6 +2270,15 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "toml_edit",
+]
+
+[[package]]
+name = "toml-span"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "369db38ce6d1fc320a54ea3f032d07c07a232ca19c40e287246aff06d57c2abe"
+dependencies = [
+ "smallvec",
 ]
 
 [[package]]
