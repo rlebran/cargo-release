@@ -174,7 +174,7 @@ pub fn set_workspace_version(
     dry_run: bool,
 ) -> CargoResult<()> {
     let original_manifest = std::fs::read_to_string(manifest_path)?;
-    let mut manifest: toml_edit::Document = original_manifest.parse()?;
+    let mut manifest: toml_edit::DocumentMut = original_manifest.parse()?;
     manifest["workspace"]["package"]["version"] = toml_edit::value(version);
     let manifest = manifest.to_string();
 
@@ -276,7 +276,7 @@ pub fn ensure_owners(
 
 pub fn set_package_version(manifest_path: &Path, version: &str, dry_run: bool) -> CargoResult<()> {
     let original_manifest = std::fs::read_to_string(manifest_path)?;
-    let mut manifest: toml_edit::Document = original_manifest.parse()?;
+    let mut manifest: toml_edit::DocumentMut = original_manifest.parse()?;
     manifest["package"]["version"] = toml_edit::value(version);
     let manifest = manifest.to_string();
 
@@ -310,7 +310,7 @@ pub fn upgrade_dependency_req(
         .parent()
         .expect("always at least a parent dir");
     let original_manifest = std::fs::read_to_string(manifest_path)?;
-    let mut manifest: toml_edit::Document = original_manifest.parse()?;
+    let mut manifest: toml_edit::DocumentMut = original_manifest.parse()?;
 
     for dep_item in find_dependency_tables(manifest.as_table_mut())
         .flat_map(|t| t.iter_mut().filter_map(|(_, d)| d.as_table_like_mut()))

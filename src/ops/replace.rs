@@ -25,23 +25,25 @@ pub struct Template<'a> {
 
 impl<'a> Template<'a> {
     pub fn render(&self, input: &str) -> String {
-        let mut s = input.to_string();
         const PREV_VERSION: &str = "{{prev_version}}";
-        s = render_var(s, PREV_VERSION, self.prev_version);
         const PREV_METADATA: &str = "{{prev_metadata}}";
-        s = render_var(s, PREV_METADATA, self.prev_metadata);
         const VERSION: &str = "{{version}}";
-        s = render_var(s, VERSION, self.version);
         const METADATA: &str = "{{metadata}}";
-        s = render_var(s, METADATA, self.metadata);
         const CRATE_NAME: &str = "{{crate_name}}";
-        s = render_var(s, CRATE_NAME, self.crate_name);
         const DATE: &str = "{{date}}";
-        s = render_var(s, DATE, self.date);
 
         const PREFIX: &str = "{{prefix}}";
-        s = render_var(s, PREFIX, self.prefix);
         const TAG_NAME: &str = "{{tag_name}}";
+
+        let mut s = input.to_owned();
+        s = render_var(s, PREV_VERSION, self.prev_version);
+        s = render_var(s, PREV_METADATA, self.prev_metadata);
+        s = render_var(s, VERSION, self.version);
+        s = render_var(s, METADATA, self.metadata);
+        s = render_var(s, CRATE_NAME, self.crate_name);
+        s = render_var(s, DATE, self.date);
+
+        s = render_var(s, PREFIX, self.prefix);
         s = render_var(s, TAG_NAME, self.tag_name);
         s
     }
@@ -71,7 +73,7 @@ pub fn do_file_replacements(
         by_file.entry(file).or_insert_with(Vec::new).push(replace);
     }
 
-    for (path, replaces) in by_file.into_iter() {
+    for (path, replaces) in by_file {
         let file = cwd.join(&path);
         log::debug!("processing replacements for file {}", file.display());
         if !file.exists() {

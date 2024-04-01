@@ -1,13 +1,14 @@
+#![allow(clippy::exit)]
 #![allow(clippy::collapsible_if)]
 #![allow(clippy::comparison_chain)]
 
 use clap::Parser;
 
-use cargo_release::*;
+use cargo_release::{error, steps};
 
 fn main() {
     let res = run();
-    error::exit(res)
+    exit(res)
 }
 
 fn run() -> Result<(), error::CliError> {
@@ -117,8 +118,14 @@ impl Verbosity {
     }
 }
 
+/// Report any error message and exit.
+fn exit(result: Result<(), error::CliError>) -> ! {
+    let code = error::report(result);
+    std::process::exit(code)
+}
+
 #[test]
 fn verify_app() {
     use clap::CommandFactory;
-    Command::command().debug_assert()
+    Command::command().debug_assert();
 }
