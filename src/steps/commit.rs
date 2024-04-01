@@ -97,12 +97,12 @@ impl CommitStep {
                     "ignoring `consolidate-commits=false`; `cargo release commit` can effectively only do one commit",
                 );
             }
-            super::commit::workspace_commit(&ws_meta, &ws_config, &selected_pkgs, dry_run)?;
+            workspace_commit(&ws_meta, &ws_config, &selected_pkgs, dry_run)?;
         } else if !selected_pkgs.is_empty() {
             let selected_pkg = selected_pkgs
                 .first()
                 .expect("non-workspace can have at most 1 package");
-            super::commit::pkg_commit(selected_pkg, dry_run)?;
+            pkg_commit(selected_pkg, dry_run)?;
         }
 
         super::finish(failed, dry_run)

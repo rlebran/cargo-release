@@ -527,7 +527,7 @@ pub fn load_package_config(
 pub struct ConfigArgs {
     /// Custom config file
     #[arg(short, long = "config", value_name = "PATH")]
-    pub custom_config: Option<std::path::PathBuf>,
+    pub custom_config: Option<PathBuf>,
 
     /// Ignore implicit configuration files.
     #[arg(long)]
@@ -541,7 +541,7 @@ pub struct ConfigArgs {
 
     /// Specify how workspace dependencies on this crate should be handed.
     #[arg(long, value_name = "ACTION", value_enum)]
-    pub dependent_version: Option<crate::config::DependentVersion>,
+    pub dependent_version: Option<DependentVersion>,
 
     /// Comma-separated globs of branch names a release can happen from
     #[arg(long, value_delimiter = ',', value_name = "GLOB[,...]")]
@@ -561,8 +561,8 @@ pub struct ConfigArgs {
 }
 
 impl ConfigArgs {
-    pub fn to_config(&self) -> crate::config::Config {
-        let mut config = crate::config::Config {
+    pub fn to_config(&self) -> Config {
+        let mut config = Config {
             allow_branch: self.allow_branch.clone(),
             sign_commit: self.sign(),
             sign_tag: self.sign(),
@@ -592,8 +592,8 @@ pub struct CommitArgs {
 }
 
 impl CommitArgs {
-    pub fn to_config(&self) -> crate::config::Config {
-        crate::config::Config {
+    pub fn to_config(&self) -> Config {
+        Config {
             sign_commit: resolve_bool_arg(self.sign_commit, self.no_sign_commit),
             ..Default::default()
         }
@@ -633,8 +633,8 @@ pub struct PublishArgs {
 }
 
 impl PublishArgs {
-    pub fn to_config(&self) -> crate::config::Config {
-        crate::config::Config {
+    pub fn to_config(&self) -> Config {
+        Config {
             publish: resolve_bool_arg(self.publish, self.no_publish),
             registry: self.registry.clone(),
             verify: resolve_bool_arg(self.verify, self.no_verify),
@@ -671,8 +671,8 @@ pub struct TagArgs {
 }
 
 impl TagArgs {
-    pub fn to_config(&self) -> crate::config::Config {
-        crate::config::Config {
+    pub fn to_config(&self) -> Config {
+        Config {
             tag: resolve_bool_arg(self.tag, self.no_tag),
             sign_tag: resolve_bool_arg(self.sign_tag, self.no_sign_tag),
             tag_prefix: self.tag_prefix.clone(),
@@ -697,8 +697,8 @@ pub struct PushArgs {
 }
 
 impl PushArgs {
-    pub fn to_config(&self) -> crate::config::Config {
-        crate::config::Config {
+    pub fn to_config(&self) -> Config {
+        Config {
             push: resolve_bool_arg(self.push, self.no_push),
             push_remote: self.push_remote.clone(),
             ..Default::default()
@@ -820,9 +820,6 @@ pub fn resolve_config(workspace_root: &Path, manifest_path: &Path) -> CargoResul
 }
 
 pub fn resolve_overrides(workspace_root: &Path, manifest_path: &Path) -> CargoResult<Config> {
-    let mut release_config = Config::default();
-
-    let mut workspace_cache = None;
     fn load_workspace<'m, 'c: 'm>(
         workspace_root: &Path,
         workspace_cache: &'c mut Option<CargoManifest>,
@@ -838,6 +835,9 @@ pub fn resolve_overrides(workspace_root: &Path, manifest_path: &Path) -> CargoRe
         Ok(workspace_cache.as_ref().unwrap())
     }
 
+    let mut release_config = Config::default();
+
+    let mut workspace_cache = None;
     // the publish flag in cargo file
     let manifest = std::fs::read_to_string(manifest_path)?;
     let manifest: CargoManifest = toml::from_str(&manifest)

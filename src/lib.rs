@@ -5,6 +5,8 @@
 //! with a `=` version requirement operator.
 
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![warn(clippy::print_stderr)]
+#![warn(clippy::print_stdout)]
 
 pub mod config;
 pub mod error;

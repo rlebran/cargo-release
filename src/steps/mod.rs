@@ -566,7 +566,7 @@ impl std::fmt::Display for TargetVersion {
     }
 }
 
-impl std::str::FromStr for TargetVersion {
+impl FromStr for TargetVersion {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -648,7 +648,7 @@ impl std::fmt::Display for BumpLevel {
     }
 }
 
-impl std::str::FromStr for BumpLevel {
+impl FromStr for BumpLevel {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
