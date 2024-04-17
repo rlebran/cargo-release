@@ -43,6 +43,7 @@ pub struct HookStep {
     #[arg(short = 'n', long, conflicts_with = "execute", hide = true)]
     dry_run: bool,
 
+    /// Exclude unchanged packages
     #[arg(long)]
     exclude_unchanged: bool,
 
