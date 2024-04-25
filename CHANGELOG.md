@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.7] - 2024-04-25
+
 ### Compatibility
 
 - MSRV is now 1.76
@@ -694,7 +696,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.6...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.7...HEAD
+[0.25.7]: https://github.com/crate-ci/cargo-release/compare/v0.25.6...v0.25.7
 [0.25.6]: https://github.com/crate-ci/cargo-release/compare/v0.25.5...v0.25.6
 [0.25.5]: https://github.com/crate-ci/cargo-release/compare/v0.25.4...v0.25.5
 [0.25.4]: https://github.com/crate-ci/cargo-release/compare/v0.25.3...v0.25.4
