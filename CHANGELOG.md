@@ -3,6 +3,14 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- MSRV is now 1.76
+
+### Fixes
+
+- Improve error message on hook failure due to permissions
+
 ## [0.25.6] - 2024-02-27
 
 ### Fixes
