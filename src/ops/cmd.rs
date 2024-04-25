@@ -38,8 +38,12 @@ fn do_call(
         }
     }
 
-    let mut child = cmd.spawn()?;
-    let result = child.wait()?;
+    let mut child = cmd
+        .spawn()
+        .map_err(|e| anyhow::format_err!("failed to launch `{cmd_name}`: {e}"))?;
+    let result = child
+        .wait()
+        .map_err(|e| anyhow::format_err!("failed to launch `{cmd_name}`: {e}"))?;
 
     Ok(result.success())
 }
