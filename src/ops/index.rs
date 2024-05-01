@@ -76,7 +76,7 @@ impl CratesIoIndex {
 
 pub struct RemoteIndex {
     index: tame_index::SparseIndex,
-    client: reqwest::blocking::Client,
+    client: tame_index::external::reqwest::blocking::Client,
     lock: FileLock,
     etags: Vec<(String, String)>,
 }
@@ -87,7 +87,7 @@ impl RemoteIndex {
         let index = tame_index::SparseIndex::new(tame_index::IndexLocation::new(
             tame_index::IndexUrl::CratesIoSparse,
         ))?;
-        let client = reqwest::blocking::ClientBuilder::new()
+        let client = tame_index::external::reqwest::blocking::ClientBuilder::new()
             .http2_prior_knowledge()
             .build()?;
         let lock = FileLock::unlocked();
@@ -114,10 +114,26 @@ impl RemoteIndex {
         let req = self
             .index
             .make_remote_request(krate_name, Some(etag), &self.lock)?;
-        let res = self.client.execute(req.try_into()?)?;
+        let (
+            tame_index::external::http::request::Parts {
+                method,
+                uri,
+                version,
+                headers,
+                ..
+            },
+            _,
+        ) = req.into_parts();
+        let mut req = self.client.request(method, uri.to_string());
+        req = req.version(version);
+        req = req.headers(headers);
+        let res = self.client.execute(req.build()?)?;
 
         // Grab the etag if it exists for future requests
-        if let Some(etag) = res.headers().get(reqwest::header::ETAG) {
+        if let Some(etag) = res
+            .headers()
+            .get(tame_index::external::reqwest::header::ETAG)
+        {
             if let Ok(etag) = etag.to_str() {
                 if let Some(i) = self.etags.iter().position(|(krate, _)| krate == name) {
                     self.etags[i].1 = etag.to_owned();
