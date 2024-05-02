@@ -147,7 +147,7 @@ pub fn push(
 ) -> Result<(), CliError> {
     if ws_config.push() {
         let git_remote = ws_config.push_remote();
-        let branch = crate::ops::git::current_branch(ws_meta.workspace_root.as_std_path())?;
+        let branch = git::current_branch(ws_meta.workspace_root.as_std_path())?;
 
         let mut shared_refs = HashSet::new();
         for pkg in pkgs {

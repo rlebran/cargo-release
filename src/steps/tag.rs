@@ -87,7 +87,7 @@ impl TagStep {
 
         for pkg in pkgs.values_mut() {
             if let Some(tag_name) = pkg.planned_tag.as_ref() {
-                if crate::ops::git::tag_exists(ws_meta.workspace_root.as_std_path(), tag_name)? {
+                if git::tag_exists(ws_meta.workspace_root.as_std_path(), tag_name)? {
                     let crate_name = pkg.meta.name.as_str();
                     let _ = crate::ops::shell::warn(format!(
                         "disabled due to existing tag ({}), skipping {}",

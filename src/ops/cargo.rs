@@ -32,9 +32,7 @@ pub fn package_content(manifest_path: &Path) -> CargoResult<Vec<std::path::PathB
     cmd.arg("--allow-dirty");
     let output = cmd.output()?;
 
-    let parent = manifest_path
-        .parent()
-        .unwrap_or_else(|| std::path::Path::new(""));
+    let parent = manifest_path.parent().unwrap_or_else(|| Path::new(""));
 
     if output.status.success() {
         let paths = ByteSlice::lines(output.stdout.as_slice())

@@ -259,7 +259,7 @@ pub fn git_version() -> CargoResult<()> {
 #[cfg(unix)]
 pub fn bytes2path(b: &[u8]) -> &Path {
     use std::os::unix::prelude::OsStrExt;
-    std::path::Path::new(std::ffi::OsStr::from_bytes(b))
+    Path::new(std::ffi::OsStr::from_bytes(b))
 }
 
 // From git2 crate

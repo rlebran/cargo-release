@@ -36,7 +36,7 @@ pub struct CommitStep {
     no_confirm: bool,
 
     #[command(flatten)]
-    commit: crate::config::CommitArgs,
+    commit: config::CommitArgs,
 }
 
 impl CommitStep {
@@ -55,7 +55,7 @@ impl CommitStep {
             .features(cargo_metadata::CargoOpt::AllFeatures)
             .exec()?;
         let config = self.to_config();
-        let ws_config = crate::config::load_workspace_config(&config, &ws_meta)?;
+        let ws_config = config::load_workspace_config(&config, &ws_meta)?;
         let pkgs = plan::load(&config, &ws_meta)?;
 
         let pkgs = plan::plan(pkgs)?;
@@ -64,7 +64,7 @@ impl CommitStep {
             .into_iter()
             .map(|(_, pkg)| pkg)
             .partition(|p| p.config.release());
-        if crate::ops::git::is_dirty(ws_meta.workspace_root.as_std_path())?.is_none() {
+        if git::is_dirty(ws_meta.workspace_root.as_std_path())?.is_none() {
             let _ = crate::ops::shell::error("nothing to commit");
             return Err(2.into());
         }
@@ -108,8 +108,8 @@ impl CommitStep {
         super::finish(failed, dry_run)
     }
 
-    fn to_config(&self) -> crate::config::ConfigArgs {
-        crate::config::ConfigArgs {
+    fn to_config(&self) -> config::ConfigArgs {
+        config::ConfigArgs {
             custom_config: self.custom_config.clone(),
             isolated: self.isolated,
             allow_branch: self.allow_branch.clone(),

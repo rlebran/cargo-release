@@ -341,9 +341,7 @@ pub fn warn_changed(
         let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
         let crate_name = pkg.meta.name.as_str();
         if let Some(prior_tag_name) = &pkg.prior_tag {
-            if let Some(changed) =
-                crate::steps::version::changed_since(ws_meta, pkg, prior_tag_name)
-            {
+            if let Some(changed) = version::changed_since(ws_meta, pkg, prior_tag_name) {
                 if !changed.is_empty() {
                     log::debug!(
                         "Files changed in {} since {}: {:#?}",

@@ -136,7 +136,7 @@ impl RemoteIndex {
         {
             if let Ok(etag) = etag.to_str() {
                 if let Some(i) = self.etags.iter().position(|(krate, _)| krate == name) {
-                    self.etags[i].1 = etag.to_owned();
+                    etag.clone_into(&mut self.etags[i].1);
                 } else {
                     self.etags.push((name.to_owned(), etag.to_owned()));
                 }

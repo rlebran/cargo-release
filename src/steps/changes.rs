@@ -214,7 +214,7 @@ pub fn changes(
                 let unbumped = pkg
                     .planned_tag
                     .as_deref()
-                    .and_then(|t| crate::ops::git::tag_exists(workspace_root, t).ok())
+                    .and_then(|t| git::tag_exists(workspace_root, t).ok())
                     .unwrap_or(false);
                 let bumped = !unbumped;
                 if let Some(max_status) = max_status {

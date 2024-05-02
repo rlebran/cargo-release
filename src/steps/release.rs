@@ -40,7 +40,7 @@ pub struct ReleaseStep {
     prev_tag_name: Option<String>,
 
     #[command(flatten)]
-    config: crate::config::ConfigArgs,
+    config: config::ConfigArgs,
 }
 
 impl ReleaseStep {
@@ -259,7 +259,7 @@ impl ReleaseStep {
                 log::debug!("updating lock file");
                 if !dry_run {
                     let workspace_path = ws_meta.workspace_root.as_std_path().join("Cargo.toml");
-                    crate::ops::cargo::update_lock(&workspace_path)?;
+                    cargo::update_lock(&workspace_path)?;
                 }
             }
 
