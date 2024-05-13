@@ -87,6 +87,7 @@ impl ReplaceStep {
                     pkg.config.registry(),
                     crate_name,
                     &version.full_version_string,
+                    pkg.config.certs_source(),
                 ) {
                     log::debug!(
                         "enabled {}, v{} is unpublished",

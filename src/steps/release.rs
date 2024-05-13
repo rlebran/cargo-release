@@ -73,7 +73,11 @@ impl ReleaseStep {
                     pkg.bump(level_or_version, self.metadata.as_deref())?;
                 }
             }
-            if index.has_krate(pkg.config.registry(), &pkg.meta.name)? {
+            if index.has_krate(
+                pkg.config.registry(),
+                &pkg.meta.name,
+                pkg.config.certs_source(),
+            )? {
                 // Already published, skip it.  Use `cargo release owner` for one-time updates
                 pkg.ensure_owners = false;
             }
@@ -106,6 +110,7 @@ impl ReleaseStep {
                     pkg.config.registry(),
                     crate_name,
                     &version.full_version_string,
+                    pkg.config.certs_source(),
                 ) {
                     log::debug!(
                         "enabled {}, v{} is unpublished",
@@ -166,6 +171,7 @@ impl ReleaseStep {
                     pkg.config.registry(),
                     crate_name,
                     &version.full_version_string,
+                    pkg.config.certs_source(),
                 ) {
                     let _ = crate::ops::shell::warn(format!(
                         "disabled by user, skipping {} v{} despite being unpublished",
@@ -213,6 +219,7 @@ impl ReleaseStep {
                 pkg.config.registry(),
                 crate_name,
                 &version.full_version_string,
+                pkg.config.certs_source(),
             ) {
                 let _ = crate::ops::shell::error(format!(
                     "{} {} is already published",

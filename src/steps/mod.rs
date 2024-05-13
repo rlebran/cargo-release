@@ -229,7 +229,7 @@ pub fn verify_rate_limit(
         // Note: these rate limits are only known for default registry
         if pkg.config.registry().is_none() && pkg.config.publish() {
             let crate_name = pkg.meta.name.as_str();
-            if index.has_krate(None, crate_name)? {
+            if index.has_krate(None, crate_name, pkg.config.certs_source())? {
                 existing += 1;
             } else {
                 new += 1;

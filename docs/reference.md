@@ -27,25 +27,27 @@ Arguments:
                    values: major, minor, patch, release, rc, beta, alpha]
 
 Options:
-      --manifest-path <PATH>        Path to Cargo.toml
-  -p, --package <SPEC>              Package to process (see `cargo help pkgid`)
-      --workspace                   Process all packages in the workspace
-      --exclude <SPEC>              Exclude packages from being processed
-      --unpublished                 Process all packages whose current version is unpublished
-  -m, --metadata <METADATA>         Semver metadata
-  -x, --execute                     Actually perform a release. Dry-run mode is the default
-      --no-confirm                  Skip release confirmation and version preview
-      --prev-tag-name <NAME>        The name of tag for the previous release
-  -c, --config <PATH>               Custom config file
-      --isolated                    Ignore implicit configuration files
-      --sign                        Sign both git commit and tag
-      --dependent-version <ACTION>  Specify how workspace dependencies on this crate should be
-                                    handed [possible values: upgrade, fix]
-      --allow-branch <GLOB[,...]>   Comma-separated globs of branch names a release can happen from
-  -q, --quiet...                    Pass many times for less log output
-  -v, --verbose...                  Pass many times for more log output
-  -h, --help                        Print help (see more with '--help')
-  -V, --version                     Print version
+      --manifest-path <PATH>         Path to Cargo.toml
+  -p, --package <SPEC>               Package to process (see `cargo help pkgid`)
+      --workspace                    Process all packages in the workspace
+      --exclude <SPEC>               Exclude packages from being processed
+      --unpublished                  Process all packages whose current version is unpublished
+  -m, --metadata <METADATA>          Semver metadata
+  -x, --execute                      Actually perform a release. Dry-run mode is the default
+      --no-confirm                   Skip release confirmation and version preview
+      --prev-tag-name <NAME>         The name of tag for the previous release
+  -c, --config <PATH>                Custom config file
+      --isolated                     Ignore implicit configuration files
+      --sign                         Sign both git commit and tag
+      --dependent-version <ACTION>   Specify how workspace dependencies on this crate should be
+                                     handed [possible values: upgrade, fix]
+      --allow-branch <GLOB[,...]>    Comma-separated globs of branch names a release can happen from
+      --certs-source <CERTS_SOURCE>  Indicate what certificate store to use for web requests
+                                     [possible values: webpki, native]
+  -q, --quiet...                     Pass many times for less log output
+  -v, --verbose...                   Pass many times for more log output
+  -h, --help                         Print help (see more with '--help')
+  -V, --version                      Print version
 
 Commit:
       --sign-commit  Sign git commit
@@ -140,7 +142,7 @@ Workspace configuration is read from the following (in precedence order)
 | `metadata`     | \-              | `optional`, `required`, `ignore`, `persistent` | `optional` | Policy for presence of absence of `--metadata` flag when changing the version |
 | `rate-limit.new-packages` | \-   | integer                     | `5`           | `optional` | Rate limit for publishing new packages |
 | `rate-limit.existing-packages` | \- | integer                  | `30`          | `optional` | Rate limit for publishing existing packages |
-
+| `certs-source` | \-              | `webpki`, `native`                             | `webpki`   | Policy for using Mozilla's standard certificate root of trust (`webpki`) or using the system certificate root of trust (`native`) |
 
 Note: fields are from the package-configuration unless otherwise specified.
 
