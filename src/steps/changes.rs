@@ -1,8 +1,7 @@
 use crate::error::CargoResult;
 use crate::error::CliError;
 use crate::ops::git;
-use crate::ops::shell::Color;
-use crate::ops::shell::ColorSpec;
+use crate::ops::style::{ERROR, GOOD, NOP, WARN};
 use crate::ops::version::VersionExt as _;
 use crate::steps::plan;
 
@@ -186,17 +185,14 @@ pub fn changes(
                 let mut max_status = None;
                 for commit in &commits {
                     #[allow(clippy::needless_borrow)] // False positive
-                    let _ = crate::ops::shell::write_stderr(&prefix, &ColorSpec::new());
-                    let _ = crate::ops::shell::write_stderr(
-                        &commit.short_id,
-                        ColorSpec::new().set_fg(Some(Color::Yellow)),
-                    );
-                    let _ = crate::ops::shell::write_stderr(" ", &ColorSpec::new());
-                    let _ = crate::ops::shell::write_stderr(&commit.summary, &ColorSpec::new());
+                    let _ = crate::ops::shell::write_stderr(&prefix, &NOP);
+                    let _ = crate::ops::shell::write_stderr(&commit.short_id, &WARN);
+                    let _ = crate::ops::shell::write_stderr(" ", &NOP);
+                    let _ = crate::ops::shell::write_stderr(&commit.summary, &NOP);
 
                     let current_status = commit.status();
                     write_status(current_status);
-                    let _ = crate::ops::shell::write_stderr("\n", &ColorSpec::new());
+                    let _ = crate::ops::shell::write_stderr("\n", &NOP);
                     match (current_status, max_status) {
                         (Some(cur), Some(max)) => {
                             max_status = Some(cur.max(max));
@@ -272,25 +268,25 @@ pub fn changes(
 fn write_status(status: Option<CommitStatus>) {
     if let Some(status) = status {
         let suffix;
-        let mut color = ColorSpec::new();
+        let mut style = NOP;
         match status {
             CommitStatus::Breaking => {
                 suffix = " (breaking)";
-                color.set_fg(Some(Color::Red));
+                style = ERROR;
             }
             CommitStatus::Feature => {
                 suffix = " (feature)";
-                color.set_fg(Some(Color::Yellow));
+                style = WARN;
             }
             CommitStatus::Fix => {
                 suffix = " (fix)";
-                color.set_fg(Some(Color::Green));
+                style = GOOD;
             }
             CommitStatus::Ignore => {
                 suffix = "";
             }
         }
-        let _ = crate::ops::shell::write_stderr(suffix, &color);
+        let _ = crate::ops::shell::write_stderr(suffix, &style);
     }
 }
 
