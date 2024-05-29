@@ -37,6 +37,7 @@ pub struct Config {
     pub dependent_version: Option<DependentVersion>,
     pub metadata: Option<MetadataPolicy>,
     pub target: Option<String>,
+    pub rate_limit: Option<RateLimit>,
 }
 
 impl Config {
@@ -85,6 +86,7 @@ impl Config {
             dependent_version: Some(empty.dependent_version()),
             metadata: Some(empty.metadata()),
             target: None,
+            rate_limit: None,
         }
     }
 
@@ -163,6 +165,10 @@ impl Config {
         }
         if let Some(target) = source.target.as_deref() {
             self.target = Some(target.to_owned());
+        }
+
+        if let Some(rate_limit) = source.rate_limit.as_ref() {
+            self.rate_limit = Some(rate_limit.to_owned());
         }
     }
 
@@ -298,6 +304,10 @@ impl Config {
 
     pub fn metadata(&self) -> MetadataPolicy {
         self.metadata.unwrap_or_default()
+    }
+
+    pub fn rate_limit(&self) -> RateLimit {
+        self.rate_limit.clone().unwrap_or_default()
     }
 }
 
@@ -450,6 +460,12 @@ pub struct TomlWorkspaceField {
 #[serde(default)]
 struct CargoMetadata {
     release: Option<Config>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct RateLimit {
+    pub new: Option<usize>,
+    pub existing: Option<usize>,
 }
 
 pub fn load_workspace_config(
