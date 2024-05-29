@@ -137,7 +137,6 @@ semver = "1.0"
 quick-error = "2.0"
 regex = "1.10"
 bstr = "1.9.1"
-termcolor = "1.4.1"
 maplit = "1.0"
 indexmap = "2.2"
 time = { version = "0.3", features = ["formatting", "macros"] }
@@ -153,9 +152,10 @@ globset = { version = "0.4.14", default-features = false }
 dunce = "1.0.4"
 trycmd = "0.15.1"
 anyhow = "1.0.82"
-concolor-control = { version = "0.0.7", features = ["auto"] }
 git-conventional = "0.12.6"
 similar = "2.5"
+anstream = "0.6.14"
+anstyle = "1.0.7"
 
 [dev-dependencies]
 assert_fs = "1.1"
