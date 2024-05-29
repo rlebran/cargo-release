@@ -463,9 +463,10 @@ struct CargoMetadata {
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
 pub struct RateLimit {
-    pub new: Option<usize>,
-    pub existing: Option<usize>,
+    pub new_packages: Option<usize>,
+    pub existing_packages: Option<usize>,
 }
 
 pub fn load_workspace_config(

@@ -239,7 +239,7 @@ pub fn verify_rate_limit(
 
     let rate_limit_config = ws_config.rate_limit();
 
-    if rate_limit_config.new.unwrap_or(5) < new {
+    if rate_limit_config.new_packages.unwrap_or(5) < new {
         // "The rate limit for creating new crates is 1 crate every 10 minutes, with a burst of 5 crates."
         success = false;
         let _ = crate::ops::shell::log(
@@ -247,17 +247,17 @@ pub fn verify_rate_limit(
             format!(
                 "attempting to publish {} new crates which is above the {} rate limit: {}",
                 new,
-                if rate_limit_config.new.is_some() {
+                if rate_limit_config.new_packages.is_some() {
                     "project"
                 } else {
                     "crates.io"
                 },
-                rate_limit_config.new.unwrap_or(5)
+                rate_limit_config.new_packages.unwrap_or(5)
             ),
         );
     }
 
-    if rate_limit_config.existing.unwrap_or(30) < existing {
+    if rate_limit_config.existing_packages.unwrap_or(30) < existing {
         // "The rate limit for new versions of existing crates is 1 per minute, with a burst of 30 crates, so when releasing new versions of these crates, you shouldn't hit the limit."
         success = false;
         let _ = crate::ops::shell::log(
@@ -265,12 +265,12 @@ pub fn verify_rate_limit(
             format!(
                 "attempting to publish {} existing crates which is above the {} rate limit: {}",
                 existing,
-                if rate_limit_config.existing.is_some() {
+                if rate_limit_config.existing_packages.is_some() {
                     "project"
                 } else {
                     "crates.io"
                 },
-                rate_limit_config.existing.unwrap_or(30)
+                rate_limit_config.existing_packages.unwrap_or(30)
             ),
         );
     }
