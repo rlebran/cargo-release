@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.8] - 2024-05-29
+
 ### Internal
 
 - Update dependencies
@@ -700,7 +702,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.7...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.8...HEAD
+[0.25.8]: https://github.com/crate-ci/cargo-release/compare/v0.25.7...v0.25.8
 [0.25.7]: https://github.com/crate-ci/cargo-release/compare/v0.25.6...v0.25.7
 [0.25.6]: https://github.com/crate-ci/cargo-release/compare/v0.25.5...v0.25.6
 [0.25.5]: https://github.com/crate-ci/cargo-release/compare/v0.25.4...v0.25.5

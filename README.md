@@ -18,7 +18,7 @@ Features
 
 ## Install
 
-Current release: 0.25.7
+Current release: 0.25.8
 
 ```console,ignore
 $ cargo install cargo-release
