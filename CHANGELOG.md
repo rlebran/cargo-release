@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Internal
+
+- Update dependencies
+
 ## [0.25.7] - 2024-04-25
 
 ### Compatibility
