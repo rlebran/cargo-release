@@ -245,13 +245,8 @@ pub fn verify_rate_limit(
         let _ = crate::ops::shell::log(
             level,
             format!(
-                "attempting to publish {} new crates which is above the {} rate limit: {}",
+                "attempting to publish {} new crates which is above the rate limit: {}",
                 new,
-                if rate_limit_config.new_packages.is_some() {
-                    "project"
-                } else {
-                    "crates.io"
-                },
                 rate_limit_config.new_packages.unwrap_or(5)
             ),
         );
@@ -263,13 +258,8 @@ pub fn verify_rate_limit(
         let _ = crate::ops::shell::log(
             level,
             format!(
-                "attempting to publish {} existing crates which is above the {} rate limit: {}",
+                "attempting to publish {} existing crates which is above the rate limit: {}",
                 existing,
-                if rate_limit_config.existing_packages.is_some() {
-                    "project"
-                } else {
-                    "crates.io"
-                },
                 rate_limit_config.existing_packages.unwrap_or(30)
             ),
         );
