@@ -138,6 +138,7 @@ Workspace configuration is read from the following (in precedence order)
 | `target`       | \-              | string                      | \-            | Target triple to use for the verification build |
 | `dependent-version` | \-         | `upgrade`, `fix`, `error`, `warn`, `ignore` | `upgrade`      | Policy for upgrading path dependency versions within the workspace |
 | `metadata`     | \-              | `optional`, `required`, `ignore`, `persistent` | `optional` | Policy for presence of absence of `--metadata` flag when changing the version |
+| `rate-limit`   | \-              | maps of strings to integers | `{ new-packages = 5, existing-packages = 30 }` | `optional` | Rate limits for the release process |
 
 
 Note: fields are from the package-configuration unless otherwise specified.
