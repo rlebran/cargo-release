@@ -86,7 +86,10 @@ impl Config {
             dependent_version: Some(empty.dependent_version()),
             metadata: Some(empty.metadata()),
             target: None,
-            rate_limit: None,
+            rate_limit: Some(RateLimit {
+                new_packages: Some(empty.rate_limit_for_new_packages()),
+                existing_packages: Some(empty.rate_limit_for_existing_packages()),
+            }),
         }
     }
 
@@ -308,6 +311,14 @@ impl Config {
 
     pub fn rate_limit(&self) -> RateLimit {
         self.rate_limit.clone().unwrap_or_default()
+    }
+
+    pub fn rate_limit_for_new_packages(&self) -> usize {
+        self.rate_limit().new_packages.unwrap_or(5)
+    }
+
+    pub fn rate_limit_for_existing_packages(&self) -> usize {
+        self.rate_limit().existing_packages.unwrap_or(30)
     }
 }
 

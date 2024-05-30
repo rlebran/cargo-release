@@ -237,30 +237,31 @@ pub fn verify_rate_limit(
         }
     }
 
-    let rate_limit_config = ws_config.rate_limit();
+    let (new_rate_limit, existing_rate_limit) = (
+        ws_config.rate_limit_for_new_packages(),
+        ws_config.rate_limit_for_existing_packages(),
+    );
 
-    if rate_limit_config.new_packages.unwrap_or(5) < new {
+    if new_rate_limit < new {
         // "The rate limit for creating new crates is 1 crate every 10 minutes, with a burst of 5 crates."
         success = false;
         let _ = crate::ops::shell::log(
             level,
             format!(
                 "attempting to publish {} new crates which is above the rate limit: {}",
-                new,
-                rate_limit_config.new_packages.unwrap_or(5)
+                new, new_rate_limit
             ),
         );
     }
 
-    if rate_limit_config.existing_packages.unwrap_or(30) < existing {
+    if existing_rate_limit < existing {
         // "The rate limit for new versions of existing crates is 1 per minute, with a burst of 30 crates, so when releasing new versions of these crates, you shouldn't hit the limit."
         success = false;
         let _ = crate::ops::shell::log(
             level,
             format!(
                 "attempting to publish {} existing crates which is above the rate limit: {}",
-                existing,
-                rate_limit_config.existing_packages.unwrap_or(30)
+                existing, existing_rate_limit
             ),
         );
     }
