@@ -460,7 +460,7 @@ struct CargoMetadata {
     release: Option<Config>,
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct RateLimit {
     #[serde(default)]
@@ -469,16 +469,22 @@ pub struct RateLimit {
     pub existing_packages: usize,
 }
 
+impl Default for RateLimit {
+    fn default() -> Self {
+        RateLimit {
+            new_packages: 5,
+            existing_packages: 30,
+        }
+    }
+}
+
 impl RateLimit {
     pub fn new() -> Self {
         Default::default()
     }
 
     pub fn from_defaults() -> Self {
-        RateLimit {
-            new_packages: 5,
-            existing_packages: 30,
-        }
+        Self::new()
     }
 
     pub fn update(&mut self, source: &RateLimit) {
