@@ -214,7 +214,7 @@ pub fn verify_monotonically_increasing(
 pub fn verify_rate_limit(
     pkgs: &[plan::PackageRelease],
     index: &mut crate::ops::index::CratesIoIndex,
-    ws_config: &crate::config::Config,
+    rate_limit: &crate::config::RateLimit,
     dry_run: bool,
     level: log::Level,
 ) -> Result<bool, crate::error::CliError> {
@@ -237,31 +237,26 @@ pub fn verify_rate_limit(
         }
     }
 
-    let (new_rate_limit, existing_rate_limit) = (
-        ws_config.rate_limit_for_new_packages(),
-        ws_config.rate_limit_for_existing_packages(),
-    );
-
-    if new_rate_limit < new {
+    if rate_limit.new_packages < new {
         // "The rate limit for creating new crates is 1 crate every 10 minutes, with a burst of 5 crates."
         success = false;
         let _ = crate::ops::shell::log(
             level,
             format!(
                 "attempting to publish {} new crates which is above the rate limit: {}",
-                new, new_rate_limit
+                new, rate_limit.new_packages
             ),
         );
     }
 
-    if existing_rate_limit < existing {
+    if rate_limit.existing_packages < existing {
         // "The rate limit for new versions of existing crates is 1 per minute, with a burst of 30 crates, so when releasing new versions of these crates, you shouldn't hit the limit."
         success = false;
         let _ = crate::ops::shell::log(
             level,
             format!(
                 "attempting to publish {} existing crates which is above the rate limit: {}",
-                existing, existing_rate_limit
+                existing, rate_limit.existing_packages
             ),
         );
     }

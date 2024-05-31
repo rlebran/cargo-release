@@ -37,7 +37,7 @@ pub struct Config {
     pub dependent_version: Option<DependentVersion>,
     pub metadata: Option<MetadataPolicy>,
     pub target: Option<String>,
-    pub rate_limit: Option<RateLimit>,
+    pub rate_limit: RateLimit,
 }
 
 impl Config {
@@ -86,10 +86,7 @@ impl Config {
             dependent_version: Some(empty.dependent_version()),
             metadata: Some(empty.metadata()),
             target: None,
-            rate_limit: Some(RateLimit {
-                new_packages: Some(empty.rate_limit_for_new_packages()),
-                existing_packages: Some(empty.rate_limit_for_existing_packages()),
-            }),
+            rate_limit: empty.rate_limit().clone(),
         }
     }
 
@@ -170,9 +167,7 @@ impl Config {
             self.target = Some(target.to_owned());
         }
 
-        if let Some(rate_limit) = source.rate_limit.as_ref() {
-            self.rate_limit = Some(rate_limit.to_owned());
-        }
+        self.rate_limit.update(&source.rate_limit);
     }
 
     pub fn allow_branch(&self) -> impl Iterator<Item = &str> {
@@ -309,16 +304,8 @@ impl Config {
         self.metadata.unwrap_or_default()
     }
 
-    pub fn rate_limit(&self) -> RateLimit {
-        self.rate_limit.clone().unwrap_or_default()
-    }
-
-    pub fn rate_limit_for_new_packages(&self) -> usize {
-        self.rate_limit().new_packages.unwrap_or(5)
-    }
-
-    pub fn rate_limit_for_existing_packages(&self) -> usize {
-        self.rate_limit().existing_packages.unwrap_or(30)
+    pub fn rate_limit(&self) -> &RateLimit {
+        &self.rate_limit
     }
 }
 
@@ -473,11 +460,35 @@ struct CargoMetadata {
     release: Option<Config>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct RateLimit {
-    pub new_packages: Option<usize>,
-    pub existing_packages: Option<usize>,
+    #[serde(default)]
+    pub new_packages: usize,
+    #[serde(default)]
+    pub existing_packages: usize,
+}
+
+impl RateLimit {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn from_defaults() -> Self {
+        RateLimit {
+            new_packages: 5,
+            existing_packages: 30,
+        }
+    }
+
+    pub fn update(&mut self, source: &RateLimit) {
+        if source.new_packages != 0 {
+            self.new_packages = source.new_packages;
+        }
+        if source.existing_packages != 0 {
+            self.existing_packages = source.existing_packages;
+        }
+    }
 }
 
 pub fn load_workspace_config(
