@@ -92,7 +92,7 @@ pub fn do_file_replacements(
             let r = regex::RegexBuilder::new(pattern).multi_line(true).build()?;
 
             let min = replace.min.or(replace.exactly).unwrap_or(1);
-            let max = replace.max.or(replace.exactly).unwrap_or(std::usize::MAX);
+            let max = replace.max.or(replace.exactly).unwrap_or(usize::MAX);
             let actual = r.find_iter(&replaced).count();
             if actual < min {
                 anyhow::bail!(
