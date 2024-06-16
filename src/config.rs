@@ -86,7 +86,7 @@ impl Config {
             dependent_version: Some(empty.dependent_version()),
             metadata: Some(empty.metadata()),
             target: None,
-            rate_limit: empty.rate_limit().clone(),
+            rate_limit: RateLimit::from_defaults(),
         }
     }
 
@@ -303,10 +303,6 @@ impl Config {
     pub fn metadata(&self) -> MetadataPolicy {
         self.metadata.unwrap_or_default()
     }
-
-    pub fn rate_limit(&self) -> &RateLimit {
-        &self.rate_limit
-    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -460,22 +456,13 @@ struct CargoMetadata {
     release: Option<Config>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct RateLimit {
     #[serde(default)]
-    pub new_packages: usize,
+    pub new_packages: Option<usize>,
     #[serde(default)]
-    pub existing_packages: usize,
-}
-
-impl Default for RateLimit {
-    fn default() -> Self {
-        RateLimit {
-            new_packages: 5,
-            existing_packages: 30,
-        }
-    }
+    pub existing_packages: Option<usize>,
 }
 
 impl RateLimit {
@@ -484,16 +471,27 @@ impl RateLimit {
     }
 
     pub fn from_defaults() -> Self {
-        Self::new()
+        Self {
+            new_packages: Some(5),
+            existing_packages: Some(30),
+        }
     }
 
     pub fn update(&mut self, source: &RateLimit) {
-        if source.new_packages != 0 {
+        if source.new_packages.is_some() {
             self.new_packages = source.new_packages;
         }
-        if source.existing_packages != 0 {
+        if source.existing_packages.is_some() {
             self.existing_packages = source.existing_packages;
         }
+    }
+
+    pub fn new_packages(&self) -> usize {
+        self.new_packages.unwrap_or(5)
+    }
+
+    pub fn existing_packages(&self) -> usize {
+        self.existing_packages.unwrap_or(30)
     }
 }
 

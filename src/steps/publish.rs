@@ -138,7 +138,7 @@ impl PublishStep {
         failed |= !super::verify_rate_limit(
             &selected_pkgs,
             &mut index,
-            ws_config.rate_limit(),
+            &ws_config.rate_limit,
             dry_run,
             log::Level::Error,
         )?;
