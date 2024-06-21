@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.10] - 2024-06-21
+
 ### Features
 
 - Add `--certs-source` for overriding where certs are read from
@@ -712,7 +714,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.9...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.10...HEAD
+[0.25.10]: https://github.com/crate-ci/cargo-release/compare/v0.25.9...v0.25.10
 [0.25.9]: https://github.com/crate-ci/cargo-release/compare/v0.25.8...v0.25.9
 [0.25.8]: https://github.com/crate-ci/cargo-release/compare/v0.25.7...v0.25.8
 [0.25.7]: https://github.com/crate-ci/cargo-release/compare/v0.25.6...v0.25.7
