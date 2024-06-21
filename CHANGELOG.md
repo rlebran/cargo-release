@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add `rate-limit.new-packages`, `rate-limit.existing-packages`  workspace config to override the defaults
+
 ## [0.25.8] - 2024-05-29
 
 ### Internal
