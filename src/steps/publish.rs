@@ -135,8 +135,13 @@ impl PublishStep {
         )?;
 
         failed |= !super::verify_metadata(&selected_pkgs, dry_run, log::Level::Error)?;
-        failed |=
-            !super::verify_rate_limit(&selected_pkgs, &mut index, dry_run, log::Level::Error)?;
+        failed |= !super::verify_rate_limit(
+            &selected_pkgs,
+            &mut index,
+            &ws_config.rate_limit,
+            dry_run,
+            log::Level::Error,
+        )?;
 
         // STEP 1: Release Confirmation
         super::confirm("Publish", &selected_pkgs, self.no_confirm, dry_run)?;

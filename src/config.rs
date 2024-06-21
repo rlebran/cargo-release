@@ -37,6 +37,7 @@ pub struct Config {
     pub dependent_version: Option<DependentVersion>,
     pub metadata: Option<MetadataPolicy>,
     pub target: Option<String>,
+    pub rate_limit: RateLimit,
 }
 
 impl Config {
@@ -85,6 +86,7 @@ impl Config {
             dependent_version: Some(empty.dependent_version()),
             metadata: Some(empty.metadata()),
             target: None,
+            rate_limit: RateLimit::from_defaults(),
         }
     }
 
@@ -164,6 +166,8 @@ impl Config {
         if let Some(target) = source.target.as_deref() {
             self.target = Some(target.to_owned());
         }
+
+        self.rate_limit.update(&source.rate_limit);
     }
 
     pub fn allow_branch(&self) -> impl Iterator<Item = &str> {
@@ -450,6 +454,45 @@ pub struct TomlWorkspaceField {
 #[serde(default)]
 struct CargoMetadata {
     release: Option<Config>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub struct RateLimit {
+    #[serde(default)]
+    pub new_packages: Option<usize>,
+    #[serde(default)]
+    pub existing_packages: Option<usize>,
+}
+
+impl RateLimit {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn from_defaults() -> Self {
+        Self {
+            new_packages: Some(5),
+            existing_packages: Some(30),
+        }
+    }
+
+    pub fn update(&mut self, source: &RateLimit) {
+        if source.new_packages.is_some() {
+            self.new_packages = source.new_packages;
+        }
+        if source.existing_packages.is_some() {
+            self.existing_packages = source.existing_packages;
+        }
+    }
+
+    pub fn new_packages(&self) -> usize {
+        self.new_packages.unwrap_or(5)
+    }
+
+    pub fn existing_packages(&self) -> usize {
+        self.existing_packages.unwrap_or(30)
+    }
 }
 
 pub fn load_workspace_config(
