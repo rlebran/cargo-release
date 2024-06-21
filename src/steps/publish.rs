@@ -90,6 +90,7 @@ impl PublishStep {
                     pkg.config.registry(),
                     crate_name,
                     &version.full_version_string,
+                    pkg.config.certs_source(),
                 ) {
                     let _ = crate::ops::shell::warn(format!(
                         "disabled due to previous publish ({}), skipping {}",
@@ -215,6 +216,7 @@ pub fn publish(
             &version.full_version_string,
             timeout,
             dry_run,
+            pkg.config.certs_source(),
         )?;
         // HACK: Even once the index is updated, there seems to be another step before the publish is fully ready.
         // We don't have a way yet to check for that, so waiting for now in hopes everything is ready

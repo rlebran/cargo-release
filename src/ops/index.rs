@@ -1,3 +1,4 @@
+use crate::config::CertsSource;
 use tame_index::krate::IndexKrate;
 use tame_index::utils::flock::FileLock;
 
@@ -22,8 +23,12 @@ impl CratesIoIndex {
         &mut self,
         registry: Option<&str>,
         name: &str,
+        certs_source: CertsSource,
     ) -> Result<bool, crate::error::CliError> {
-        Ok(self.krate(registry, name)?.map(|_| true).unwrap_or(false))
+        Ok(self
+            .krate(registry, name, certs_source)?
+            .map(|_| true)
+            .unwrap_or(false))
     }
 
     /// Determines if the specified crate version exists in the crates.io index
@@ -33,8 +38,9 @@ impl CratesIoIndex {
         registry: Option<&str>,
         name: &str,
         version: &str,
+        certs_source: CertsSource,
     ) -> Result<Option<bool>, crate::error::CliError> {
-        let krate = self.krate(registry, name)?;
+        let krate = self.krate(registry, name, certs_source)?;
         Ok(krate.map(|ik| ik.versions.iter().any(|iv| iv.version == version)))
     }
 
@@ -51,6 +57,7 @@ impl CratesIoIndex {
         &mut self,
         registry: Option<&str>,
         name: &str,
+        certs_source: CertsSource,
     ) -> Result<Option<IndexKrate>, crate::error::CliError> {
         if let Some(registry) = registry {
             log::trace!("Cannot connect to registry `{registry}`");
@@ -64,7 +71,7 @@ impl CratesIoIndex {
 
         if self.index.is_none() {
             log::trace!("Connecting to index");
-            self.index = Some(RemoteIndex::open()?);
+            self.index = Some(RemoteIndex::open(certs_source)?);
         }
         let index = self.index.as_mut().unwrap();
         log::trace!("Downloading index for {name}");
@@ -83,13 +90,22 @@ pub struct RemoteIndex {
 
 impl RemoteIndex {
     #[inline]
-    pub fn open() -> Result<Self, crate::error::CliError> {
+    pub fn open(certs_source: CertsSource) -> Result<Self, crate::error::CliError> {
         let index = tame_index::SparseIndex::new(tame_index::IndexLocation::new(
             tame_index::IndexUrl::CratesIoSparse,
         ))?;
-        let client = tame_index::external::reqwest::blocking::ClientBuilder::new()
-            .http2_prior_knowledge()
-            .build()?;
+
+        let client = {
+            let builder = tame_index::external::reqwest::blocking::ClientBuilder::new();
+
+            let builder = match certs_source {
+                CertsSource::Webpki => builder.tls_built_in_webpki_certs(true),
+                CertsSource::Native => builder.tls_built_in_native_certs(true),
+            };
+
+            builder.build()?
+        };
+
         let lock = FileLock::unlocked();
 
         Ok(Self {

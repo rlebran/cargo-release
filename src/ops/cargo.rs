@@ -3,7 +3,7 @@ use std::path::Path;
 
 use bstr::ByteSlice;
 
-use crate::config;
+use crate::config::{self, CertsSource};
 use crate::error::CargoResult;
 use crate::ops::cmd::call;
 
@@ -115,6 +115,7 @@ pub fn wait_for_publish(
     version: &str,
     timeout: std::time::Duration,
     dry_run: bool,
+    certs_source: CertsSource,
 ) -> CargoResult<()> {
     if !dry_run {
         if registry.is_some() {
@@ -128,7 +129,7 @@ pub fn wait_for_publish(
         let mut logged = false;
         loop {
             index.update_krate(registry, name);
-            if is_published(index, registry, name, version) {
+            if is_published(index, registry, name, version, certs_source) {
                 break;
             } else if timeout < now.elapsed() {
                 anyhow::bail!("timeout waiting for crate to be published");
@@ -153,8 +154,9 @@ pub fn is_published(
     registry: Option<&str>,
     name: &str,
     version: &str,
+    certs_source: CertsSource,
 ) -> bool {
-    match index.has_krate_version(registry, name, version) {
+    match index.has_krate_version(registry, name, version, certs_source) {
         Ok(has_krate_version) => has_krate_version.unwrap_or(false),
         Err(err) => {
             // For both http and git indices, this _might_ be an error that goes away in

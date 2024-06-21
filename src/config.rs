@@ -38,6 +38,7 @@ pub struct Config {
     pub metadata: Option<MetadataPolicy>,
     pub target: Option<String>,
     pub rate_limit: RateLimit,
+    pub certs_source: Option<CertsSource>,
 }
 
 impl Config {
@@ -87,6 +88,7 @@ impl Config {
             metadata: Some(empty.metadata()),
             target: None,
             rate_limit: RateLimit::from_defaults(),
+            certs_source: Some(empty.certs_source()),
         }
     }
 
@@ -166,8 +168,10 @@ impl Config {
         if let Some(target) = source.target.as_deref() {
             self.target = Some(target.to_owned());
         }
-
         self.rate_limit.update(&source.rate_limit);
+        if let Some(certs) = source.certs_source {
+            self.certs_source = Some(certs);
+        }
     }
 
     pub fn allow_branch(&self) -> impl Iterator<Item = &str> {
@@ -303,6 +307,10 @@ impl Config {
     pub fn metadata(&self) -> MetadataPolicy {
         self.metadata.unwrap_or_default()
     }
+
+    pub fn certs_source(&self) -> CertsSource {
+        self.certs_source.unwrap_or_default()
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -344,6 +352,18 @@ pub enum DependentVersion {
     Upgrade,
     /// Upgrade when the old version requirement no longer applies
     Fix,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, clap::ValueEnum)]
+#[serde(rename_all = "kebab-case")]
+#[value(rename_all = "kebab-case")]
+#[derive(Default)]
+pub enum CertsSource {
+    /// Use certs from Mozilla's root certificate store.
+    #[default]
+    Webpki,
+    /// Use certs from the system root certificate store.
+    Native,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, clap::ValueEnum)]
@@ -590,6 +610,10 @@ pub struct ConfigArgs {
     #[arg(long, value_delimiter = ',', value_name = "GLOB[,...]")]
     pub allow_branch: Option<Vec<String>>,
 
+    /// Indicate what certificate store to use for web requests.
+    #[arg(long)]
+    pub certs_source: Option<CertsSource>,
+
     #[command(flatten)]
     pub commit: CommitArgs,
 
@@ -610,6 +634,7 @@ impl ConfigArgs {
             sign_commit: self.sign(),
             sign_tag: self.sign(),
             dependent_version: self.dependent_version,
+            certs_source: self.certs_source,
             ..Default::default()
         };
         config.update(&self.commit.to_config());
