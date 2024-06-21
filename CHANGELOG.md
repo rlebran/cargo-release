@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add `--certs-source` for overriding where certs are read from
+
 ## [0.25.9] - 2024-06-21
 
 ### Features
