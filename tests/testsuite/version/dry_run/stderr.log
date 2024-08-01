@@ -1,3 +1,0 @@
-warning: push target `origin/master` doesn't exist
-   Upgrading sample from 0.1.0 to 2.0.0
-warning: aborting release due to dry run; re-run with `--execute`

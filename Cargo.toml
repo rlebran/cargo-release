@@ -5,7 +5,7 @@ resolver = "2"
 repository = "https://github.com/crate-ci/cargo-release"
 license = "MIT OR Apache-2.0"
 edition = "2021"
-rust-version = "1.76"  # MSRV
+rust-version = "1.78"  # MSRV
 include = [
   "build.rs",
   "src/**/*",
@@ -164,9 +164,9 @@ anstyle = "1.0.7"
 [dev-dependencies]
 assert_fs = "1.1"
 predicates = "3.1"
-snapbox = "0.4.16"
-cargo-test-macro.git = "https://github.com/rust-lang/cargo"
-cargo-test-support.git = "https://github.com/rust-lang/cargo"
+snapbox = "0.6.16"
+cargo-test-macro = "0.2.1"
+cargo-test-support = "0.2.1"
 
 [profile.release]
 panic = "abort"
