@@ -3,6 +3,15 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Build MSRV is now 1.78
+- Runtime MSRV is now 1.66
+
+### Fixes
+
+- Removed our own wait-for-publish logic, relying on Cargo instead
+
 ## [0.25.10] - 2024-06-21
 
 ### Features
