@@ -148,7 +148,7 @@ impl PublishStep {
         super::confirm("Publish", &selected_pkgs, self.no_confirm, dry_run)?;
 
         // STEP 3: cargo publish
-        publish(&ws_meta, &selected_pkgs, &mut index, dry_run)?;
+        publish(&ws_meta, &selected_pkgs, dry_run)?;
 
         super::finish(failed, dry_run)
     }
@@ -167,7 +167,6 @@ impl PublishStep {
 pub fn publish(
     ws_meta: &cargo_metadata::Metadata,
     pkgs: &[plan::PackageRelease],
-    index: &mut crate::ops::index::CratesIoIndex,
     dry_run: bool,
 ) -> Result<(), CliError> {
     for pkg in pkgs {
@@ -207,19 +206,8 @@ pub fn publish(
             return Err(101.into());
         }
 
-        let timeout = std::time::Duration::from_secs(300);
-        let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
-        crate::ops::cargo::wait_for_publish(
-            index,
-            pkg.config.registry(),
-            crate_name,
-            &version.full_version_string,
-            timeout,
-            dry_run,
-            pkg.config.certs_source(),
-        )?;
-        // HACK: Even once the index is updated, there seems to be another step before the publish is fully ready.
-        // We don't have a way yet to check for that, so waiting for now in hopes everything is ready
+        // HACK: This is a fallback in case users can't or don't want to rely on cargo waiting for
+        // them
         if !dry_run {
             let publish_grace_sleep = std::env::var("PUBLISH_GRACE_SLEEP")
                 .unwrap_or_else(|_| Default::default())

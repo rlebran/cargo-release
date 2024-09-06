@@ -108,47 +108,6 @@ pub fn publish(
     call(command, false)
 }
 
-pub fn wait_for_publish(
-    index: &mut crate::ops::index::CratesIoIndex,
-    registry: Option<&str>,
-    name: &str,
-    version: &str,
-    timeout: std::time::Duration,
-    dry_run: bool,
-    certs_source: CertsSource,
-) -> CargoResult<()> {
-    if !dry_run {
-        if registry.is_some() {
-            // HACK: `index` never reports crates as present for alternative registries
-            log::debug!("Not waiting for publish as that is only supported for crates.io; ensure you are using at least cargo v1.66 which will wait for you.");
-            return Ok(());
-        }
-
-        let now = std::time::Instant::now();
-        let sleep_time = std::time::Duration::from_secs(1);
-        let mut logged = false;
-        loop {
-            index.update_krate(registry, name);
-            if is_published(index, registry, name, version, certs_source) {
-                break;
-            } else if timeout < now.elapsed() {
-                anyhow::bail!("timeout waiting for crate to be published");
-            }
-
-            if !logged {
-                let _ = crate::ops::shell::status(
-                    "Waiting",
-                    format!("on {name} to propagate to index"),
-                );
-                logged = true;
-            }
-            std::thread::sleep(sleep_time);
-        }
-    }
-
-    Ok(())
-}
-
 pub fn is_published(
     index: &mut crate::ops::index::CratesIoIndex,
     registry: Option<&str>,

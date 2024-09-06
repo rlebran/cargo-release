@@ -321,7 +321,7 @@ impl ReleaseStep {
         }
 
         // STEP 3: cargo publish
-        super::publish::publish(&ws_meta, &selected_pkgs, &mut index, dry_run)?;
+        super::publish::publish(&ws_meta, &selected_pkgs, dry_run)?;
         super::owner::ensure_owners(&selected_pkgs, dry_run)?;
 
         // STEP 5: Tag
