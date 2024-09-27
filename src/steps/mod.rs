@@ -57,7 +57,7 @@ pub fn verify_tags_missing(
                     let crate_name = pkg.meta.name.as_str();
                     let _ = crate::ops::shell::log(
                         level,
-                        format!("tag `{}` already exists (for `{}`)", tag_name, crate_name),
+                        format!("tag `{tag_name}` already exists (for `{crate_name}`)"),
                     );
                     tag_exists = true;
                 }
@@ -91,7 +91,7 @@ pub fn verify_tags_exist(
                     let crate_name = pkg.meta.name.as_str();
                     let _ = crate::ops::shell::log(
                         level,
-                        format!("tag `{}` doesn't exist (for `{}`)", tag_name, crate_name),
+                        format!("tag `{tag_name}` doesn't exist (for `{crate_name}`)"),
                     );
                     tag_missing = true;
                 }
@@ -163,10 +163,7 @@ pub fn verify_if_behind(
     let branch = crate::ops::git::current_branch(path)?;
     crate::ops::git::fetch(path, git_remote, &branch)?;
     if crate::ops::git::is_behind_remote(path, git_remote, &branch)? {
-        let _ = crate::ops::shell::log(
-            level,
-            format!("{} is behind {}/{}", branch, git_remote, branch),
-        );
+        let _ = crate::ops::shell::log(level, format!("{branch} is behind {git_remote}/{branch}"));
         if level == log::Level::Error {
             success = false;
             if !dry_run {
@@ -464,7 +461,7 @@ pub fn confirm(
             use std::io::Write;
 
             let mut buffer: Vec<u8> = vec![];
-            writeln!(&mut buffer, "{}", step).unwrap();
+            writeln!(&mut buffer, "{step}").unwrap();
             for pkg in pkgs {
                 let crate_name = pkg.meta.name.as_str();
                 let version = pkg.planned_version.as_ref().unwrap_or(&pkg.initial_version);
@@ -558,10 +555,10 @@ impl std::fmt::Display for TargetVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
             TargetVersion::Relative(bump_level) => {
-                write!(f, "{}", bump_level)
+                write!(f, "{bump_level}")
             }
             TargetVersion::Absolute(version) => {
-                write!(f, "{}", version)
+                write!(f, "{version}")
             }
         }
     }
@@ -660,7 +657,7 @@ impl FromStr for BumpLevel {
                 return Ok(*variant);
             }
         }
-        Err(format!("Invalid variant: {}", s))
+        Err(format!("Invalid variant: {s}"))
     }
 }
 

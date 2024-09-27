@@ -112,7 +112,7 @@ pub fn changes(
             let repo = git2::Repository::discover(workspace_root)?;
 
             let mut tag_id = None;
-            let fq_prior_tag_name = format!("refs/tags/{}", prior_tag_name);
+            let fq_prior_tag_name = format!("refs/tags/{prior_tag_name}");
             repo.tag_foreach(|id, name| {
                 if name == fq_prior_tag_name.as_bytes() {
                     tag_id = Some(id);

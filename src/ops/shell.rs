@@ -9,7 +9,7 @@ use crate::ops::style::{ERROR, HEADER, NOTE, WARN};
 pub fn confirm(prompt: &str) -> bool {
     let mut input = String::new();
 
-    console_println(&format!("{} [y/N] ", prompt), Style::new());
+    console_println(&format!("{prompt} [y/N] "), Style::new());
 
     stdout().flush().unwrap();
     stdin().read_line(&mut input).expect("y/n required");
@@ -32,7 +32,7 @@ pub fn print(
     if justified {
         write!(stderr, "{style}{status:>12}{style:#}")?;
     } else {
-        write!(stderr, "{style}{}{style:#}:", status)?;
+        write!(stderr, "{style}{status}{style:#}:")?;
     }
 
     writeln!(stderr, " {message:#}").with_context(|| "Failed to write message")?;
