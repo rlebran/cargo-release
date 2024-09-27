@@ -407,10 +407,7 @@ fn upgrade_req(
 
     let _ = crate::ops::shell::status(
         "Updating",
-        format!(
-            "{}'s dependency from {} to {}",
-            manifest_name, existing_req_str, new_req
-        ),
+        format!("{manifest_name}'s dependency from {existing_req_str} to {new_req}"),
     );
     *version_value = toml_edit::value(new_req);
     true

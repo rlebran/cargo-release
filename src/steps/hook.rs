@@ -207,8 +207,7 @@ pub fn hook(
         // so here we set dry_run=false and always execute the command.
         if !cmd::call_with_env(pre_rel_hook, envs, cwd, false)? {
             let _ = crate::ops::shell::error(format!(
-                "release of {} aborted by non-zero return of prerelease hook.",
-                crate_name
+                "release of {crate_name} aborted by non-zero return of prerelease hook."
             ));
             return Err(101.into());
         }

@@ -130,8 +130,7 @@ impl ReleaseStep {
                 {
                     if !changed.is_empty() {
                         let _ = crate::ops::shell::warn(format!(
-                            "disabled by user, skipping {} which has files changed since {}: {:#?}",
-                            crate_name, prior_tag_name, changed
+                            "disabled by user, skipping {crate_name} which has files changed since {prior_tag_name}: {changed:#?}"
                         ));
                     } else {
                         log::trace!(

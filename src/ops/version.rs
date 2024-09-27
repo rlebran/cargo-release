@@ -69,12 +69,12 @@ impl VersionExt for semver::Version {
                 } else {
                     1
                 };
-                self.pre = semver::Prerelease::new(&format!("{}.{}", VERSION_ALPHA, new_ext_ver))?;
+                self.pre = semver::Prerelease::new(&format!("{VERSION_ALPHA}.{new_ext_ver}"))?;
                 Ok(())
             }
         } else {
             self.increment_patch();
-            self.pre = semver::Prerelease::new(&format!("{}.1", VERSION_ALPHA))?;
+            self.pre = semver::Prerelease::new(&format!("{VERSION_ALPHA}.1"))?;
             Ok(())
         }
     }
@@ -92,12 +92,12 @@ impl VersionExt for semver::Version {
                 } else {
                     1
                 };
-                self.pre = semver::Prerelease::new(&format!("{}.{}", VERSION_BETA, new_ext_ver))?;
+                self.pre = semver::Prerelease::new(&format!("{VERSION_BETA}.{new_ext_ver}"))?;
                 Ok(())
             }
         } else {
             self.increment_patch();
-            self.pre = semver::Prerelease::new(&format!("{}.1", VERSION_BETA))?;
+            self.pre = semver::Prerelease::new(&format!("{VERSION_BETA}.1"))?;
             Ok(())
         }
     }
@@ -109,11 +109,11 @@ impl VersionExt for semver::Version {
             } else {
                 1
             };
-            self.pre = semver::Prerelease::new(&format!("{}.{}", VERSION_RC, new_ext_ver))?;
+            self.pre = semver::Prerelease::new(&format!("{VERSION_RC}.{new_ext_ver}"))?;
             Ok(())
         } else {
             self.increment_patch();
-            self.pre = semver::Prerelease::new(&format!("{}.1", VERSION_RC))?;
+            self.pre = semver::Prerelease::new(&format!("{VERSION_RC}.1"))?;
             Ok(())
         }
     }
@@ -172,8 +172,7 @@ pub fn upgrade_requirement(req: &str, version: &semver::Version) -> CargoResult<
         {
             assert!(
                 new_req.matches(version),
-                "Invalid req created: {}",
-                new_req_text
+                "Invalid req created: {new_req_text}"
             );
         }
         if new_req_text == req_text {
