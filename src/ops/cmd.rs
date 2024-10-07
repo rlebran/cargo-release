@@ -12,11 +12,11 @@ fn do_call(
     dry_run: bool,
 ) -> CargoResult<bool> {
     let command: Vec<_> = command.into_iter().map(|s| s.into()).collect();
+    if path.is_some() {
+        log::trace!("cd {}", path.unwrap().display());
+    }
+    log::trace!("{}", command.join(" "));
     if dry_run {
-        if path.is_some() {
-            log::trace!("cd {}", path.unwrap().display());
-        }
-        log::trace!("{}", command.join(" "));
         return Ok(true);
     }
     let mut iter = command.iter();
