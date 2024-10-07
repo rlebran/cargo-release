@@ -94,7 +94,9 @@ pub fn publish(
 
     let feature_arg;
     match features {
-        Features::None => (),
+        Features::None => {
+            command.push("--no-default-features");
+        }
         Features::Selective(vec) => {
             feature_arg = vec.join(" ");
             command.push("--features");

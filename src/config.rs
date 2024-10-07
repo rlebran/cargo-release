@@ -299,11 +299,7 @@ impl Config {
             cargo::Features::All
         } else {
             let features = self.enable_features();
-            if features.is_empty() {
-                cargo::Features::None
-            } else {
-                cargo::Features::Selective(features.to_owned())
-            }
+            cargo::Features::Selective(features.to_owned())
         }
     }
 
