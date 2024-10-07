@@ -193,7 +193,7 @@ pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliEr
         // trying to specify it.
         // atm at least Cargo doesn't seem to mind if `crate_name` is also a transitive dep, unlike
         // other cargo commands
-        let pkgid = Some(crate_name);
+        let pkgid = &[crate_name];
         if !crate::ops::cargo::publish(
             dry_run,
             verify,

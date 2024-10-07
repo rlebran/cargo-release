@@ -54,7 +54,7 @@ pub fn publish(
     dry_run: bool,
     verify: bool,
     manifest_path: &Path,
-    pkgid: Option<&str>,
+    pkgids: &[&str],
     features: &Features,
     registry: Option<&str>,
     target: Option<&str>,
@@ -68,7 +68,7 @@ pub fn publish(
         manifest_path.to_str().unwrap(),
     ];
 
-    if let Some(pkgid) = pkgid {
+    for pkgid in pkgids {
         command.push("--package");
         command.push(pkgid);
     }
