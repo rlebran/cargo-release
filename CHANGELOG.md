@@ -3,6 +3,14 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Build MSRV is now 1.79
+
+### Fixes
+
+- Report current dir for hook error messages
+
 ## [0.25.11] - 2024-09-06
 
 ### Compatibility
