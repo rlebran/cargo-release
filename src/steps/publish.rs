@@ -187,7 +187,7 @@ pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliEr
             true
         };
         // feature list to release
-        let features = &pkg.features;
+        let features = &[&pkg.features];
         // HACK: Ignoring the more precise `pkg.meta.id`.  While it has been stabilized,
         // the version won't match after we do a version bump and it seems too messy to bother
         // trying to specify it.

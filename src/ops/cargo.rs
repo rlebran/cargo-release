@@ -2,6 +2,7 @@ use std::env;
 use std::path::Path;
 
 use bstr::ByteSlice;
+use itertools::Itertools as _;
 
 use crate::config::{self, CertsSource};
 use crate::error::CargoResult;
@@ -55,7 +56,7 @@ pub fn publish(
     verify: bool,
     manifest_path: &Path,
     pkgids: &[&str],
-    features: &Features,
+    features: &[&Features],
     registry: Option<&str>,
     target: Option<&str>,
 ) -> CargoResult<bool> {
@@ -92,20 +93,27 @@ pub fn publish(
         command.push(target);
     }
 
-    let feature_arg;
-    match features {
-        Features::None => {
-            command.push("--no-default-features");
-        }
-        Features::Selective(vec) => {
-            feature_arg = vec.join(" ");
-            command.push("--features");
-            command.push(&feature_arg);
-        }
-        Features::All => {
-            command.push("--all-features");
-        }
-    };
+    if features.iter().any(|f| matches!(f, Features::None)) {
+        command.push("--no-default-features");
+    }
+    if features.iter().any(|f| matches!(f, Features::All)) {
+        command.push("--all-features");
+    }
+    let selective = features
+        .iter()
+        .filter_map(|f| {
+            if let Features::Selective(f) = f {
+                Some(f)
+            } else {
+                None
+            }
+        })
+        .flatten()
+        .join(",");
+    if !selective.is_empty() {
+        command.push("--features");
+        command.push(&selective);
+    }
 
     call(command, false)
 }
