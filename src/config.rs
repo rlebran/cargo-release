@@ -319,7 +319,9 @@ impl Config {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
-pub struct Unstable {}
+pub struct Unstable {
+    workspace_publish: Option<bool>,
+}
 
 impl Unstable {
     pub fn new() -> Self {
@@ -327,16 +329,30 @@ impl Unstable {
     }
 
     pub fn from_defaults() -> Self {
-        let _empty = Self::new();
-        Self {}
+        let empty = Self::new();
+        Self {
+            workspace_publish: Some(empty.workspace_publish()),
+        }
     }
-    pub fn update(&mut self, _source: &Self) {}
+    pub fn update(&mut self, source: &Self) {
+        if let Some(workspace_publish) = source.workspace_publish {
+            self.workspace_publish = Some(workspace_publish);
+        }
+    }
+
+    pub fn workspace_publish(&self) -> bool {
+        self.workspace_publish.unwrap_or(false)
+    }
 }
 
 impl From<Vec<UnstableValues>> for Unstable {
     fn from(values: Vec<UnstableValues>) -> Self {
-        let unstable = Unstable::new();
-        for _value in values {}
+        let mut unstable = Unstable::new();
+        for value in values {
+            match value {
+                UnstableValues::WorkspacePublish(value) => unstable.workspace_publish = Some(value),
+            }
+        }
         unstable
     }
 }
@@ -683,20 +699,42 @@ impl ConfigArgs {
 }
 
 #[derive(Clone, Debug)]
-pub enum UnstableValues {}
+pub enum UnstableValues {
+    WorkspacePublish(bool),
+}
 
 impl std::str::FromStr for UnstableValues {
     type Err = anyhow::Error;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        let (name, value) = value.split_once('=').unwrap_or((value, ""));
-        anyhow::bail!("unsupported unstable feature name `{name}` (value `{value}`)");
+        let (name, mut value) = value.split_once('=').unwrap_or((value, ""));
+        match name {
+            "workspace-publish" => {
+                if value.is_empty() {
+                    value = "true";
+                }
+                let value = match value {
+                    "true" => true,
+                    "false" => false,
+                    _ => anyhow::bail!(
+                        "unsupported value `{name}={value}`, expected one of `true`, `false`"
+                    ),
+                };
+                Ok(UnstableValues::WorkspacePublish(value))
+            }
+            _ => {
+                anyhow::bail!("unsupported unstable feature name `{name}` (value `{value}`)");
+            }
+        }
     }
 }
 
 impl std::fmt::Display for UnstableValues {
     fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        "".fmt(fmt)
+        match self {
+            Self::WorkspacePublish(true) => "workspace-publish".fmt(fmt),
+            Self::WorkspacePublish(false) => "".fmt(fmt),
+        }
     }
 }
 
