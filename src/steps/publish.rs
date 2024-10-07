@@ -148,7 +148,7 @@ impl PublishStep {
         super::confirm("Publish", &selected_pkgs, self.no_confirm, dry_run)?;
 
         // STEP 3: cargo publish
-        publish(&ws_meta, &selected_pkgs, dry_run)?;
+        publish(&selected_pkgs, dry_run)?;
 
         super::finish(failed, dry_run)
     }
@@ -164,11 +164,7 @@ impl PublishStep {
     }
 }
 
-pub fn publish(
-    ws_meta: &cargo_metadata::Metadata,
-    pkgs: &[plan::PackageRelease],
-    dry_run: bool,
-) -> Result<(), CliError> {
+pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliError> {
     for pkg in pkgs {
         if !pkg.config.publish() {
             continue;
@@ -187,13 +183,8 @@ pub fn publish(
         };
         // feature list to release
         let features = &pkg.features;
-        let pkgid = if 1 < ws_meta.workspace_members.len() {
-            // Override `workspace.default-members`
-            Some(crate_name)
-        } else {
-            // `-p` is not recommended outside of a workspace
-            None
-        };
+        // Despite `cargo_metadata`s docs, `id` was stabilized as `cargo pkgid` as of 1.77
+        let pkgid = Some(pkg.meta.id.repr.as_str());
         if !crate::ops::cargo::publish(
             dry_run,
             verify,

@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Runtime MSRV is now 1.77
+
 ## [0.25.12] - 2024-10-07
 
 ### Compatibility
