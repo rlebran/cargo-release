@@ -183,7 +183,8 @@ pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliEr
         };
         // feature list to release
         let features = &pkg.features;
-        let pkgid = Some(crate_name);
+        // Despite `cargo_metadata`s docs, `id` was stabilized as `cargo pkgid` as of 1.77
+        let pkgid = Some(pkg.meta.id.repr.as_str());
         if !crate::ops::cargo::publish(
             dry_run,
             verify,
