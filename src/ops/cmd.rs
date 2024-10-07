@@ -38,12 +38,17 @@ fn do_call(
         }
     }
 
+    let ctx_dir = match path {
+        Some(p) => format!(" within {}", p.display()),
+        None => String::new(),
+    };
+
     let mut child = cmd
         .spawn()
-        .map_err(|e| anyhow::format_err!("failed to launch `{cmd_name}`: {e}"))?;
+        .map_err(|e| anyhow::format_err!("failed to launch `{cmd_name}`{ctx_dir}: {e}"))?;
     let result = child
         .wait()
-        .map_err(|e| anyhow::format_err!("failed to launch `{cmd_name}`: {e}"))?;
+        .map_err(|e| anyhow::format_err!("failed to launch `{cmd_name}`{ctx_dir}: {e}"))?;
 
     Ok(result.success())
 }
