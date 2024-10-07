@@ -170,6 +170,10 @@ impl PublishStep {
 }
 
 pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliError> {
+    serial_publish(pkgs, dry_run)
+}
+
+fn serial_publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliError> {
     for pkg in pkgs {
         if !pkg.config.publish() {
             continue;
