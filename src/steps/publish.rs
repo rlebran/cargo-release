@@ -183,6 +183,11 @@ pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliEr
         };
         // feature list to release
         let features = &pkg.features;
+        // HACK: Ignoring the more precise `pkg.meta.id`.  While it has been stabilized,
+        // the version won't match after we do a version bump and it seems too messy to bother
+        // trying to specify it.
+        // atm at least Cargo doesn't seem to mind if `crate_name` is also a transitive dep, unlike
+        // other cargo commands
         let pkgid = Some(crate_name);
         if !crate::ops::cargo::publish(
             dry_run,
