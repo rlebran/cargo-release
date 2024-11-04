@@ -267,7 +267,6 @@ dependencies = [
  "anyhow",
  "assert_fs",
  "bstr",
- "cargo-test-macro",
  "cargo-test-support",
  "cargo_metadata",
  "clap",
