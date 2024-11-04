@@ -41,6 +41,16 @@
       ],
       automerge: true,
     },
+    {
+      matchManagers: [
+        'cargo',
+      ],
+      matchPackageNames: [
+        'cargo-test-support',
+        'cargo-test-macro',
+      ],
+      groupName: 'cargo-test',
+    },
     // Goals:
     // - Rollup safe upgrades to reduce CI runner load
     // - Have lockfile and manifest in-sync
