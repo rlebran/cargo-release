@@ -3,6 +3,14 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Build MSRV is now 1.80
+
+### Fixes
+
+- Improve `allow-branch` error
+
 ## [0.25.12] - 2024-10-07
 
 ### Compatibility
