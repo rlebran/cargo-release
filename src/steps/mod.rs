@@ -126,12 +126,14 @@ pub fn verify_git_branch(
     let good_branches = good_branches.build()?;
     let good_branch_match = good_branches.matched_path_or_any_parents(&branch, false);
     if !good_branch_match.is_ignore() {
+        let allowed = ws_config
+            .allow_branch()
+            .map(|b| format!("`{b}`"))
+            .join(", ");
         let _ = crate::ops::shell::log(
             level,
             format!(
-                "cannot release from branch {:?}, instead switch to {:?}",
-                branch,
-                ws_config.allow_branch().join(", ")
+                "cannot release from branch `{branch}` as it doesn't match {allowed}; either switch to an allowed branch or add this branch to `allow-branch`",
             ),
         );
         log::trace!("due to {:?}", good_branch_match);
