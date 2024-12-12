@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Support for cargo's nightly workspace publishing (requires `cargo +nightly release -Zworkspace-publish ...`)
+
 ## [0.25.13] - 2024-11-15
 
 ### Compatibility
