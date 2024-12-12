@@ -21,6 +21,10 @@ pub struct PushStep {
     #[arg(long)]
     isolated: bool,
 
+    /// Unstable options
+    #[arg(short = 'Z', value_name = "FEATURE")]
+    z: Vec<crate::config::UnstableValues>,
+
     /// Comma-separated globs of branch names a release can happen from
     #[arg(long, value_delimiter = ',')]
     allow_branch: Option<Vec<String>>,
@@ -131,6 +135,7 @@ impl PushStep {
         crate::config::ConfigArgs {
             custom_config: self.custom_config.clone(),
             isolated: self.isolated,
+            z: self.z.clone(),
             allow_branch: self.allow_branch.clone(),
             tag: self.tag.clone(),
             push: self.push.clone(),

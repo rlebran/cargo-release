@@ -19,6 +19,10 @@ pub struct ChangesStep {
     #[arg(long)]
     isolated: bool,
 
+    /// Unstable options
+    #[arg(short = 'Z', value_name = "FEATURE")]
+    z: Vec<crate::config::UnstableValues>,
+
     /// Comma-separated globs of branch names a release can happen from
     #[arg(long, value_delimiter = ',')]
     allow_branch: Option<Vec<String>>,

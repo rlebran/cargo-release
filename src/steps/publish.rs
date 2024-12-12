@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::error::CliError;
 use crate::ops::git;
 use crate::steps::plan;
@@ -20,6 +22,10 @@ pub struct PublishStep {
     /// Ignore implicit configuration files.
     #[arg(long)]
     isolated: bool,
+
+    /// Unstable options
+    #[arg(short = 'Z', value_name = "FEATURE")]
+    z: Vec<crate::config::UnstableValues>,
 
     /// Comma-separated globs of branch names a release can happen from
     #[arg(long, value_delimiter = ',')]
@@ -148,7 +154,7 @@ impl PublishStep {
         super::confirm("Publish", &selected_pkgs, self.no_confirm, dry_run)?;
 
         // STEP 3: cargo publish
-        publish(&selected_pkgs, dry_run)?;
+        publish(&selected_pkgs, dry_run, &ws_config.unstable)?;
 
         super::finish(failed, dry_run)
     }
@@ -157,6 +163,7 @@ impl PublishStep {
         crate::config::ConfigArgs {
             custom_config: self.custom_config.clone(),
             isolated: self.isolated,
+            z: self.z.clone(),
             allow_branch: self.allow_branch.clone(),
             publish: self.publish.clone(),
             ..Default::default()
@@ -164,7 +171,85 @@ impl PublishStep {
     }
 }
 
-pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliError> {
+pub fn publish(
+    pkgs: &[plan::PackageRelease],
+    dry_run: bool,
+    unstable: &crate::config::Unstable,
+) -> Result<(), CliError> {
+    if pkgs.is_empty() {
+        Ok(())
+    } else if unstable.workspace_publish() {
+        let first_pkg = pkgs.first().unwrap();
+        let registry = first_pkg.config.registry();
+        let target = first_pkg.config.target.as_deref();
+        if pkgs
+            .iter()
+            .all(|p| p.config.registry() == registry && p.config.target.as_deref() == target)
+        {
+            let manifest_path = &first_pkg.manifest_path;
+            workspace_publish(manifest_path, pkgs, registry, target, dry_run)
+        } else {
+            serial_publish(pkgs, dry_run)
+        }
+    } else {
+        serial_publish(pkgs, dry_run)
+    }
+}
+
+fn workspace_publish(
+    manifest_path: &std::path::Path,
+    pkgs: &[plan::PackageRelease],
+    registry: Option<&str>,
+    target: Option<&str>,
+    dry_run: bool,
+) -> Result<(), CliError> {
+    let crate_names = pkgs.iter().map(|p| p.meta.name.as_str()).join(", ");
+    let _ = crate::ops::shell::status("Publishing", crate_names);
+
+    let verify = pkgs.iter().all(|p| p.config.verify());
+    let features = pkgs.iter().map(|p| &p.features).collect::<Vec<_>>();
+    // HACK: Ignoring the more precise `pkg.meta.id`.  While it has been stabilized,
+    // the version won't match after we do a version bump and it seems too messy to bother
+    // trying to specify it.
+    // atm at least Cargo doesn't seem to mind if `crate_name` is also a transitive dep, unlike
+    // other cargo commands
+    let pkgids = pkgs
+        .iter()
+        .map(|p| p.meta.name.as_str())
+        .collect::<Vec<_>>();
+    if !crate::ops::cargo::publish(
+        dry_run,
+        verify,
+        manifest_path,
+        &pkgids,
+        &features,
+        registry,
+        target,
+    )? {
+        return Err(101.into());
+    }
+
+    // HACK: This is a fallback in case users can't or don't want to rely on cargo waiting for
+    // them
+    if !dry_run {
+        let publish_grace_sleep = std::env::var("PUBLISH_GRACE_SLEEP")
+            .unwrap_or_else(|_| Default::default())
+            .parse()
+            .unwrap_or(0);
+        if 0 < publish_grace_sleep {
+            log::debug!(
+                "waiting an additional {} seconds for {} to update its indices...",
+                publish_grace_sleep,
+                registry.unwrap_or("crates.io")
+            );
+            std::thread::sleep(std::time::Duration::from_secs(publish_grace_sleep));
+        }
+    }
+
+    Ok(())
+}
+
+fn serial_publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliError> {
     for pkg in pkgs {
         if !pkg.config.publish() {
             continue;
@@ -182,13 +267,13 @@ pub fn publish(pkgs: &[plan::PackageRelease], dry_run: bool) -> Result<(), CliEr
             true
         };
         // feature list to release
-        let features = &pkg.features;
+        let features = &[&pkg.features];
         // HACK: Ignoring the more precise `pkg.meta.id`.  While it has been stabilized,
         // the version won't match after we do a version bump and it seems too messy to bother
         // trying to specify it.
         // atm at least Cargo doesn't seem to mind if `crate_name` is also a transitive dep, unlike
         // other cargo commands
-        let pkgid = Some(crate_name);
+        let pkgid = &[crate_name];
         if !crate::ops::cargo::publish(
             dry_run,
             verify,

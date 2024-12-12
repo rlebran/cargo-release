@@ -38,6 +38,7 @@ Options:
       --prev-tag-name <NAME>         The name of tag for the previous release
   -c, --config <PATH>                Custom config file
       --isolated                     Ignore implicit configuration files
+  -Z <FEATURE>                       Unstable options
       --sign                         Sign both git commit and tag
       --dependent-version <ACTION>   Specify how workspace dependencies on this crate should be
                                      handed [possible values: upgrade, fix]

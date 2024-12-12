@@ -2,6 +2,7 @@ use std::env;
 use std::path::Path;
 
 use bstr::ByteSlice;
+use itertools::Itertools as _;
 
 use crate::config::{self, CertsSource};
 use crate::error::CargoResult;
@@ -54,8 +55,8 @@ pub fn publish(
     dry_run: bool,
     verify: bool,
     manifest_path: &Path,
-    pkgid: Option<&str>,
-    features: &Features,
+    pkgids: &[&str],
+    features: &[&Features],
     registry: Option<&str>,
     target: Option<&str>,
 ) -> CargoResult<bool> {
@@ -68,7 +69,10 @@ pub fn publish(
         manifest_path.to_str().unwrap(),
     ];
 
-    if let Some(pkgid) = pkgid {
+    if 1 < pkgids.len() {
+        command.push("-Zpackage-workspace");
+    }
+    for pkgid in pkgids {
         command.push("--package");
         command.push(pkgid);
     }
@@ -92,18 +96,27 @@ pub fn publish(
         command.push(target);
     }
 
-    let feature_arg;
-    match features {
-        Features::None => (),
-        Features::Selective(vec) => {
-            feature_arg = vec.join(" ");
-            command.push("--features");
-            command.push(&feature_arg);
-        }
-        Features::All => {
-            command.push("--all-features");
-        }
-    };
+    if features.iter().any(|f| matches!(f, Features::None)) {
+        command.push("--no-default-features");
+    }
+    if features.iter().any(|f| matches!(f, Features::All)) {
+        command.push("--all-features");
+    }
+    let selective = features
+        .iter()
+        .filter_map(|f| {
+            if let Features::Selective(f) = f {
+                Some(f)
+            } else {
+                None
+            }
+        })
+        .flatten()
+        .join(",");
+    if !selective.is_empty() {
+        command.push("--features");
+        command.push(&selective);
+    }
 
     call(command, false)
 }
