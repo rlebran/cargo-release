@@ -23,7 +23,7 @@ pub struct Template<'a> {
     pub tag_name: Option<&'a str>,
 }
 
-impl<'a> Template<'a> {
+impl Template<'_> {
     pub fn render(&self, input: &str) -> String {
         const PREV_VERSION: &str = "{{prev_version}}";
         const PREV_METADATA: &str = "{{prev_metadata}}";
