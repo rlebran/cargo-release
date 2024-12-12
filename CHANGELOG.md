@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.14] - 2024-12-12
+
 ### Features
 
 - Support for cargo's nightly workspace publishing (requires `cargo +nightly release -Zworkspace-publish ...`)
@@ -749,7 +751,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.13...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.14...HEAD
+[0.25.14]: https://github.com/crate-ci/cargo-release/compare/v0.25.13...v0.25.14
 [0.25.13]: https://github.com/crate-ci/cargo-release/compare/v0.25.12...v0.25.13
 [0.25.12]: https://github.com/crate-ci/cargo-release/compare/v0.25.11...v0.25.12
 [0.25.11]: https://github.com/crate-ci/cargo-release/compare/v0.25.10...v0.25.11
