@@ -60,6 +60,10 @@ pub fn publish(
     registry: Option<&str>,
     target: Option<&str>,
 ) -> CargoResult<bool> {
+    if pkgids.is_empty() {
+        return Ok(true);
+    }
+
     let cargo = cargo();
 
     let mut command: Vec<&str> = vec![
@@ -444,7 +448,7 @@ pub fn sort_workspace(ws_meta: &cargo_metadata::Metadata) -> Vec<&cargo_metadata
         .iter()
         .filter_map(|n| {
             if members.contains(&n.id) {
-                // Ignore dev dependencies. This breaks dev dependency cyles and allows for
+                // Ignore dev dependencies. This breaks dev dependency cycles and allows for
                 // correct publishing order when a workspace package depends on the root package.
 
                 // It would be more correct to ignore only dev dependencies without a version
