@@ -60,6 +60,10 @@ pub fn publish(
     registry: Option<&str>,
     target: Option<&str>,
 ) -> CargoResult<bool> {
+    if pkgids.is_empty() {
+        return Ok(true);
+    }
+
     let cargo = cargo();
 
     let mut command: Vec<&str> = vec![

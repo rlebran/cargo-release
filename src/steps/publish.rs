@@ -215,6 +215,7 @@ fn workspace_publish(
     // other cargo commands
     let pkgids = pkgs
         .iter()
+        .filter(|p| p.config.publish())
         .map(|p| p.meta.name.as_str())
         .collect::<Vec<_>>();
     if !crate::ops::cargo::publish(
