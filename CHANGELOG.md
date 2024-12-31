@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.15] - 2024-12-31
+
 ### Fixes
 
 - *(unstable)* Don't try to workspace-publish packages that have `publish = false`
@@ -755,7 +757,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.14...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.15...HEAD
+[0.25.15]: https://github.com/crate-ci/cargo-release/compare/v0.25.14...v0.25.15
 [0.25.14]: https://github.com/crate-ci/cargo-release/compare/v0.25.13...v0.25.14
 [0.25.13]: https://github.com/crate-ci/cargo-release/compare/v0.25.12...v0.25.13
 [0.25.12]: https://github.com/crate-ci/cargo-release/compare/v0.25.11...v0.25.12
