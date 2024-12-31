@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(unstable)* Don't try to workspace-publish packages that have `publish = false`
+
 ## [0.25.14] - 2024-12-12
 
 ### Features
