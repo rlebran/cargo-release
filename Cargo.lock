@@ -358,16 +358,16 @@ dependencies = [
 
 [[package]]
 name = "cargo_metadata"
-version = "0.18.1"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d886547e41f740c616ae73108f6eb70afe6d940c7bc697cb30f13daec073037"
+checksum = "8769706aad5d996120af43197bf46ef6ad0fda35216b4505f926a365a232d924"
 dependencies = [
  "camino",
  "cargo-platform",
  "semver",
  "serde",
  "serde_json",
- "thiserror 1.0.63",
+ "thiserror 2.0.9",
 ]
 
 [[package]]
@@ -404,13 +404,15 @@ dependencies = [
 
 [[package]]
 name = "clap-cargo"
-version = "0.14.1"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23b2ea69cefa96b848b73ad516ad1d59a195cdf9263087d977f648a818c8b43e"
+checksum = "2c2ba3908a873a4f3ae90fc2e59d9d27da06f3dec04614ab657c87580090f55b"
 dependencies = [
  "anstyle",
  "cargo_metadata",
  "clap",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2075,9 +2077,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.121"
+version = "1.0.134"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ab380d7d9f22ef3f21ad3e6c1ebe8e4fc7a2000ccba2e4d71fc96f15b2cb609"
+checksum = "d00f4175c42ee48b15416f6193a959ba3a0d67fc699a0db9ad12df9f83991c7d"
 dependencies = [
  "itoa",
  "memchr",
