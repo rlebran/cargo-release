@@ -117,7 +117,7 @@ impl PackageRelease {
             .targets
             .iter()
             .flat_map(|t| t.kind.iter())
-            .any(|k| k == "bin");
+            .any(|k| *k == cargo_metadata::TargetKind::Bin);
         let mut package_content = cargo::package_content(&manifest_path)?;
         if bin {
             // When publishing bins, the lock file is listed as relative to the package root, so
