@@ -1,9 +1,9 @@
 use crate::error::CargoResult;
 use crate::error::CliError;
 use crate::ops::git;
-use crate::ops::style::{ERROR, GOOD, NOP, WARN};
 use crate::ops::version::VersionExt as _;
 use crate::steps::plan;
+use clap_cargo::style::{ERROR, GOOD, NOP, WARN};
 
 /// Print commits since last tag
 #[derive(Debug, Clone, clap::Args)]

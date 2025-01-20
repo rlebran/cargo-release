@@ -160,7 +160,6 @@ anyhow = "1.0.82"
 git-conventional = "0.12.6"
 similar = "2.5"
 anstream = "0.6.14"
-anstyle = "1.0.7"
 
 [dev-dependencies]
 assert_fs = "1.1"
