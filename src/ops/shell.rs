@@ -1,10 +1,10 @@
 use std::io::{stdin, stdout, Write};
 
-use anstyle::Style;
 use anyhow::Context as _;
+use clap::builder::styling::Style;
+use clap_cargo::style::{ERROR, HEADER, NOTE, WARN};
 
 use crate::error::CargoResult;
-use crate::ops::style::{ERROR, HEADER, NOTE, WARN};
 
 pub fn confirm(prompt: &str) -> bool {
     let mut input = String::new();
