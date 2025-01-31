@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Use workspace default commit message (rather than package) when workspace inheritance forces consolidated-commits on
+
 ## [0.25.15] - 2024-12-31
 
 ### Fixes
