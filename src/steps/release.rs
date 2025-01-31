@@ -59,7 +59,7 @@ impl ReleaseStep {
             // When evaluating dependency ordering, we need to consider optional dependencies
             .features(cargo_metadata::CargoOpt::AllFeatures)
             .exec()?;
-        let ws_config = config::load_workspace_config(&self.config, &ws_meta)?;
+        let mut ws_config = config::load_workspace_config(&self.config, &ws_meta)?;
         let mut pkgs = plan::load(&self.config, &ws_meta)?;
 
         for pkg in pkgs.values_mut() {
@@ -193,6 +193,7 @@ impl ReleaseStep {
         let mut failed = false;
 
         let consolidate_commits = super::consolidate_commits(&selected_pkgs, &excluded_pkgs)?;
+        ws_config.consolidate_commits = Some(consolidate_commits);
 
         // STEP 0: Help the user make the right decisions.
         failed |= !super::verify_git_is_clean(
