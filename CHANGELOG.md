@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.25.17] - 2025-02-05
+
 ### Fixes
 
 - Upgrade "unrendered variable" debug message to warning
@@ -767,7 +769,8 @@ git.
 * Doc update
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.16...HEAD
+[Unreleased]: https://github.com/crate-ci/cargo-release/compare/v0.25.17...HEAD
+[0.25.17]: https://github.com/crate-ci/cargo-release/compare/v0.25.16...v0.25.17
 [0.25.16]: https://github.com/crate-ci/cargo-release/compare/v0.25.15...v0.25.16
 [0.25.15]: https://github.com/crate-ci/cargo-release/compare/v0.25.14...v0.25.15
 [0.25.14]: https://github.com/crate-ci/cargo-release/compare/v0.25.13...v0.25.14
