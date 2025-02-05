@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Upgrade "unrendered variable" debug message to warning
+
 ## [0.25.16] - 2025-01-31
 
 ### Fixes
