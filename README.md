@@ -1,6 +1,12 @@
 # cargo release
 
-Features
+> Streamline your crate release process
+
+`cargo release` extends `cargo publish` with common release practices like
+validation, version management, tagging, and pushing.
+The process is customizable but with defaults that should help you get up and running quickly.
+
+Features include:
 - Ensure you are in a good state for release, including:
   - Right branch
   - Up-to-date with remote
