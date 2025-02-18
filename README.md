@@ -34,6 +34,8 @@ $ cargo install cargo-release
 
 ```console,ignore
 $ cargo release [level]
+<dry-run output>
+$ cargo release [level] --execute
 ```
 
 * See the [reference](docs/reference.md) for more on `level`, other CLI
