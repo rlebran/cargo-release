@@ -3,9 +3,9 @@ use cargo_test_support::compare::assert_ui;
 use cargo_test_support::current_dir;
 use cargo_test_support::file;
 
+use crate::CargoCommand;
 use crate::git_from;
 use crate::init_registry;
-use crate::CargoCommand;
 
 #[cargo_test]
 fn case() {

@@ -1,7 +1,7 @@
 use crate::config;
 use crate::error::CliError;
 use crate::ops::git;
-use crate::ops::replace::{Template, NOW};
+use crate::ops::replace::{NOW, Template};
 use crate::steps::plan;
 
 /// Commit the specified packages

@@ -373,16 +373,16 @@ pub fn warn_changed(
                 }
             } else {
                 log::debug!(
-                        "cannot detect changes for {} because tag {} is missing. Try setting `--prev-tag-name <TAG>`.",
-                        crate_name,
-                        prior_tag_name
-                    );
+                    "cannot detect changes for {} because tag {} is missing. Try setting `--prev-tag-name <TAG>`.",
+                    crate_name,
+                    prior_tag_name
+                );
             }
         } else {
             log::debug!(
-                    "cannot detect changes for {} because no tag was found. Try setting `--prev-tag-name <TAG>`.",
-                    crate_name,
-                );
+                "cannot detect changes for {} because no tag was found. Try setting `--prev-tag-name <TAG>`.",
+                crate_name,
+            );
         }
     }
 

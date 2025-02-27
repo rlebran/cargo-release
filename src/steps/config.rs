@@ -1,9 +1,9 @@
 use std::io::Write;
 
-use crate::config::load_package_config;
-use crate::config::load_workspace_config;
 use crate::config::Config;
 use crate::config::ConfigArgs;
+use crate::config::load_package_config;
+use crate::config::load_workspace_config;
 use crate::error::CliError;
 
 /// Dump workspace configuration

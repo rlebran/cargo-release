@@ -252,17 +252,21 @@ pub fn changes(
                         CommitStatus::Ignore => None,
                     };
                     if let Some(suggested) = suggested {
-                        let _ = crate::ops::shell::note(format!("to update the version, run `cargo release version -p {crate_name} {suggested}`"));
+                        let _ = crate::ops::shell::note(format!(
+                            "to update the version, run `cargo release version -p {crate_name} {suggested}`"
+                        ));
                     } else if unbumped {
-                        let _ = crate::ops::shell::note(format!("to update the version, run `cargo release version -p {crate_name} <LEVEL|VERSION>`"));
+                        let _ = crate::ops::shell::note(format!(
+                            "to update the version, run `cargo release version -p {crate_name} <LEVEL|VERSION>`"
+                        ));
                     }
                 }
             }
         } else {
             log::debug!(
-                    "Cannot detect changes for {} because no tag was found. Try setting `--prev-tag-name <TAG>`.",
-                    crate_name,
-                );
+                "Cannot detect changes for {} because no tag was found. Try setting `--prev-tag-name <TAG>`.",
+                crate_name,
+            );
         }
     }
 
