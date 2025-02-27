@@ -12,3 +12,7 @@ pub mod config;
 pub mod error;
 pub mod ops;
 pub mod steps;
+
+#[doc = include_str!("../README.md")]
+#[cfg(doctest)]
+pub struct ReadmeDoctests;
