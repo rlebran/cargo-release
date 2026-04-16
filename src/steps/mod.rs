@@ -348,7 +348,7 @@ pub fn verify_metadata(
 pub fn detect_changed(
     ws_meta: &cargo_metadata::Metadata,
     pkgs: &[plan::PackageRelease],
-    exclude_unchanged: bool
+    exclude_unchanged: bool,
 ) -> Result<Vec<plan::PackageRelease>, crate::error::CliError> {
     let mut changed_pkgs = std::collections::HashSet::new();
     for pkg in pkgs {
@@ -373,14 +373,12 @@ pub fn detect_changed(
                 } else {
                     if exclude_unchanged {
                         log::debug!(
-                            "Excluding {}, no changes made since tag {}",
-                            crate_name,
-                            prior_tag_name,
+                            "Excluding {crate_name}, no changes made since tag {prior_tag_name}",
                         );
                     } else {
                         let _ = crate::ops::shell::warn(format!(
-                            "updating {} to {} despite no changes made since tag {}",
-                            crate_name, version.full_version_string, prior_tag_name
+                            "updating {crate_name} to {} despite no changes made since tag {prior_tag_name}",
+                            version.full_version_string,
                         ));
                     }
                 }
@@ -397,7 +395,10 @@ pub fn detect_changed(
     }
 
     let packages = if exclude_unchanged {
-        pkgs.iter().filter(|p| changed_pkgs.contains(&p.meta.id)).cloned().collect()
+        pkgs.iter()
+            .filter(|p| changed_pkgs.contains(&p.meta.id))
+            .cloned()
+            .collect()
     } else {
         pkgs.to_vec()
     };

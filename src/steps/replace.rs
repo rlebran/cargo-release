@@ -134,7 +134,8 @@ impl ReplaceStep {
             log::Level::Warn,
         )?;
 
-        let selected_pkgs = super::detect_changed(&ws_meta, &selected_pkgs, self.exclude_unchanged)?;
+        let selected_pkgs =
+            super::detect_changed(&ws_meta, &selected_pkgs, self.exclude_unchanged)?;
 
         failed |= !super::verify_git_branch(
             ws_meta.workspace_root.as_std_path(),

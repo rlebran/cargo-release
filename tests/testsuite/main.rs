@@ -2,6 +2,8 @@
 #![warn(clippy::needless_borrow)]
 #![warn(clippy::redundant_clone)]
 
+use snapbox::cargo_bin;
+
 mod version;
 
 fn init_registry() {
@@ -34,7 +36,7 @@ fn create_default_gitconfig() {
 }
 
 pub fn cargo_exe() -> std::path::PathBuf {
-    snapbox::cmd::cargo_bin("cargo-release")
+    cargo_bin!("cargo-release").into()
 }
 
 /// Test the cargo command

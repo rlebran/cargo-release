@@ -124,7 +124,8 @@ impl VersionStep {
         failed |=
             !super::verify_monotonically_increasing(&selected_pkgs, dry_run, log::Level::Error)?;
 
-        let selected_pkgs = super::detect_changed(&ws_meta, &selected_pkgs, self.exclude_unchanged)?;
+        let selected_pkgs =
+            super::detect_changed(&ws_meta, &selected_pkgs, self.exclude_unchanged)?;
 
         failed |= !super::verify_git_branch(
             ws_meta.workspace_root.as_std_path(),
